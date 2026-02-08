@@ -1,0 +1,25 @@
+{
+  "authorizedUserId": "285660957110304769",
+  "channels": [
+    {
+      "name": "Social's Nightclub",
+      "serverId": "694912331267964961",
+      "channelId": "1158094442339766303"
+    },
+    {
+      "name": "Vertigo",
+      "serverId": "1390814481872851015",
+      "channelId": "1469677790965137573"
+    },
+    {
+      "name": "Perished",
+      "serverId": "1468304553547141297",
+      "channelId": "1469166794643341434"
+    },
+    {
+      "name": "Vamp",
+      "serverId": "1396975004226420787",
+      "channelId": "1455015679911657534"
+    }
+  ]
+}
