@@ -18,6 +18,10 @@ module.exports = {
         '`!role edit name {role} to {new name}` - Rename any role\n' +
         '`!role edit color {role} {color}` - Change any role\'s color\n' +
         '`!role edit color {role} {color1} {color2}` - Gradient for any role\n\n' +
+        '**Moderation Commands:**\n' +
+        '`!purge {count}` - Delete the last {count} messages (1-100)\n\n' +
+        '**Owner Commands:**\n' +
+        '`!reset pandas` - Reset panda leaderboard data\n\n' +
         '**Note:** Admins cannot modify roles belonging to higher-ranked users.'
       );
     }

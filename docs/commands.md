@@ -37,6 +37,15 @@
 - `!panda list` - View top 10 leaderboard
 - `!panda help` - Show panda commands
 
+## reset (owner-only)
+- `!reset pandas` - Reset panda leaderboard data
+
+## purge
+- `!purge {count}` - Delete the last `{count}` messages in the current channel
+  - **Requires:** User and bot both need "Manage Messages"
+  - **Range:** `{count}` must be a whole number between `1` and `100`
+  - **Note:** Discord does not bulk delete messages older than 14 days
+
 ## imitate
 - `!imitate @user {message}` - Send a message appearing as another user
   - The bot will send the message with the mentioned user's profile picture and username

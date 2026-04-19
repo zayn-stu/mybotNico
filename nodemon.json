@@ -9,7 +9,19 @@
   "ext": "js,json",
   "ignore": [
     "node_modules/",
-    "*.log"
+    "*.log",
+    "data/pandas.json",
+    "data/pandas.json.tmp",
+    "data/pandaRuntimeState.json",
+    "data/pandaRuntimeState.json.tmp",
+    "data/inviteRewards.json",
+    "data/inviteRewards.json.tmp",
+    "data/victoryPandas.json",
+    "data/victoryPandas.json.tmp",
+    "data/roundHistory.json",
+    "data/roundHistory.json.tmp",
+    "data/roles.json",
+    "data/roles.json.tmp"
   ],
   "delay": 1000
 }

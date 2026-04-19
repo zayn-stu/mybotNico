@@ -1,8 +1,27 @@
+// Cooldown: userId -> timestamp of last use
+const cooldowns = new Map();
+const COOLDOWN_MS = 10_000; // 10 seconds
+
 module.exports = {
   name: 'imitate',
   description: 'Imitate another user by sending a message with their profile picture and nickname',
   usage: '!imitate @user {message}',
   async execute(message, args) {
+    // Permission guard: require Manage Messages to use this command
+    const { PermissionFlagsBits } = require('discord.js');
+    if (!message.member.permissions.has(PermissionFlagsBits.ManageMessages)) {
+      return message.reply('❌ You need the Manage Messages permission to use this command.');
+    }
+
+    // Cooldown check
+    const now = Date.now();
+    const lastUsed = cooldowns.get(message.author.id) || 0;
+    const remaining = COOLDOWN_MS - (now - lastUsed);
+    if (remaining > 0) {
+      return message.reply(`⏳ Please wait ${(remaining / 1000).toFixed(1)}s before using this again.`);
+    }
+    cooldowns.set(message.author.id, now);
+
     // Get the mentioned member (not just user, so we can get server nickname)
     const targetMember = message.mentions.members.first();
     

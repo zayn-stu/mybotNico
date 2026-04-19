@@ -1,25 +1,40 @@
 {
-  "authorizedUserId": "285660957110304769",
   "channels": [
     {
       "name": "Social's Nightclub",
       "serverId": "694912331267964961",
-      "channelId": "1158094442339766303"
+      "channelId": "1158094442339766303",
+      "adFile": "sn.txt"
     },
     {
-      "name": "Vertigo",
-      "serverId": "1390814481872851015",
-      "channelId": "1469677790965137573"
-    },
-    {
-      "name": "Perished",
+      "name": "Descend",
       "serverId": "1468304553547141297",
-      "channelId": "1469166794643341434"
+      "channelId": "1469166794643341434",
+      "adFile": "descend.txt"
     },
     {
       "name": "Vamp",
       "serverId": "1396975004226420787",
-      "channelId": "1455015679911657534"
+      "channelId": "1455015679911657534",
+      "adFile": "vamp.txt"
+    },
+    {
+      "name": "Dejavu",
+      "serverId": "1466962277415649341",
+      "channelId": "1467002570974167153",
+      "adFile": "dejavu.txt"
+    },
+    {
+      "name": "Floralys",
+      "serverId": "1453059944235667488",
+      "channelId": "1455678806219034789",
+      "adFile": "floralys.txt"
+    },
+    {
+      "name": "Humans",
+      "serverId": "1200231085838184478",
+      "channelId": "1275036687218642956",
+      "adFile": "humans.txt"
     }
   ]
 }
