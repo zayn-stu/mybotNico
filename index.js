@@ -3,7 +3,7 @@ const { Client, GatewayIntentBits, Partials, MessageType } = require('discord.js
 const { loadCommands, handleCommand } = require('./handlers/commandHandler');
 const { handleMemberLeave } = require('./handlers/memberLeaveHandler');
 const { handleRoleDelete } = require('./handlers/roleDeleteHandler');
-const { addPanda, deductPandas, restoreMember, getLeaderboard } = require('./utils/pandaStorage');
+const { addPanda, deductPandas, restoreMember, getLeaderboard, updateMemberDisplayName, migrateDisplayNamesWithGuilds } = require('./utils/pandaStorage');
 const { registerMessageAndCheckAward } = require('./utils/pandaRuntime');
 const { handlePartnerDM } = require('./handlers/partnerHandler');
 const { getSavedColorRole, clearSavedColorRole } = require('./utils/memberRoleMemory');
@@ -13,6 +13,7 @@ const { getTodayBumpCount, incrementBumpCount } = require('./utils/bumpTracking'
 const { awardVoicePandas } = require('./utils/voiceRewardTracking');
 const { checkLastPlaceBoost } = require('./utils/lastPlaceBoost');
 const { initPandaLogger, logPandaAward } = require('./utils/pandaLogger');
+const { updateDisplayName } = require('./utils/memberDisplayNames');
 const pandaChannels = require('./data/pandaChannels.json');
 
 const PREFIX = '!';
@@ -56,6 +57,9 @@ client.once('ready', async () => {
   console.log(`✅ Bot is online as ${client.user.tag}`);
   initPandaLogger(client);
 
+  // Migrate display names with guild context (fetches actual server nicknames)
+  await migrateDisplayNamesWithGuilds(client);
+
   // Cache invites for all tracked guilds
   for (const guildId of TRACKED_GUILDS) {
     const guild = client.guilds.cache.get(guildId);
@@ -98,7 +102,8 @@ client.on('guildMemberAdd', async (member) => {
         // Resolve inviter username from cache
         const inviterMember = member.guild.members.cache.get(inviteInfo.inviterId);
         const inviterUsername = inviterMember?.user?.username ?? inviteInfo.inviterId;
-        addPanda(member.guild.id, inviteInfo.inviterId, inviterUsername, 3);
+        const inviterDisplayName = inviterMember?.displayName || inviterUsername;
+        addPanda(member.guild.id, inviteInfo.inviterId, inviterUsername, 3, inviterDisplayName);
         recordInviteReward(member.guild.id, member.user.id, inviteInfo.inviterId);
         addPendingReaction(member.guild.id, inviteInfo.inviterId, PANDA_EMOJI_NAME, 3, 'invite');
         logPandaAward(member.guild.id, inviteInfo.inviterId, inviterUsername, 3, 'invite');
@@ -140,6 +145,14 @@ client.on('guildMemberAdd', async (member) => {
   }
 });
 
+// ─── Member nickname update — cache display names ────────────────────────────
+client.on('guildMemberUpdate', (oldMember, newMember) => {
+  if (oldMember.displayName !== newMember.displayName) {
+    updateDisplayName(newMember.guild.id, newMember.id, newMember.displayName);
+    updateMemberDisplayName(newMember.guild.id, newMember.id, newMember.displayName);
+  }
+});
+
 // ─── Role deleted in Discord — auto-cleanup DB ────────────────────────────────
 client.on('roleDelete', async (role) => {
   if (role.guild.id !== SOCIALS_GUILD_ID) return;
@@ -151,7 +164,7 @@ client.on('messageCreate', async (message) => {
   // ─── System join message — react with welcome emoji (Socials only) ───────────
   if (message.guild?.id === SOCIALS_GUILD_ID && message.type === MessageType.GuildMemberJoin) {
     const pandaEmoji = message.guild.emojis.cache.find(e => e.name === PANDA_EMOJI_NAME);
-    if (pandaEmoji) await message.react(pandaEmoji).catch(() => {});
+    if (pandaEmoji) await message.react(pandaEmoji).catch(() => { });
     return;
   }
 
@@ -169,7 +182,9 @@ client.on('messageCreate', async (message) => {
           console.log(`[bump] ${bumper.username} (${bumper.id}) hit daily bump cap (${BUMP_CAP_PER_DAY}) — skipped`);
         } else {
           incrementBumpCount(message.guild.id, bumper.id);
-          addPanda(message.guild.id, bumper.id, bumper.username);
+          const bumperMember = message.guild.members.cache.get(bumper.id);
+          const bumperDisplayName = bumperMember?.displayName || bumper.username;
+          addPanda(message.guild.id, bumper.id, bumper.username, 1, bumperDisplayName);
           addPendingReaction(message.guild.id, bumper.id, PANDA_EMOJI_NAME, 1, 'bump');
           logPandaAward(message.guild.id, bumper.id, bumper.username, 1, 'bump');
           checkLastPlaceBoost(message.guild.id, bumper.id, logPandaAward);
@@ -220,7 +235,9 @@ client.on('messageCreate', async (message) => {
 
     if (pandaResult.awarded) {
       try {
-        addPanda(message.guild.id, message.author.id, message.author.username);
+        const authorMember = message.guild.members.cache.get(message.author.id);
+        const authorDisplayName = authorMember?.displayName || message.author.username;
+        addPanda(message.guild.id, message.author.id, message.author.username, 1, authorDisplayName);
         logPandaAward(message.guild.id, message.author.id, message.author.username, 1, 'chat');
         checkLastPlaceBoost(message.guild.id, message.author.id, logPandaAward);
 
@@ -247,12 +264,14 @@ client.on('messageCreate', async (message) => {
 
         if (Math.random() < chance) {
           const pirateAmount = Math.random() < 0.5 ? 2 : 3;
-          addPanda(message.guild.id, message.author.id, message.author.username, pirateAmount);
+          const pirateMember = message.guild.members.cache.get(message.author.id);
+          const pirateDisplayName = pirateMember?.displayName || message.author.username;
+          addPanda(message.guild.id, message.author.id, message.author.username, pirateAmount, pirateDisplayName);
           logPandaAward(message.guild.id, message.author.id, message.author.username, pirateAmount, 'pirate');
           checkLastPlaceBoost(message.guild.id, message.author.id, logPandaAward);
 
           const pirateEmoji = message.guild.emojis.cache.find(e => e.name.toLowerCase() === PIRATE_EMOJI_NAME.toLowerCase());
-          if (pirateEmoji) await message.react(pirateEmoji).catch(() => {});
+          if (pirateEmoji) await message.react(pirateEmoji).catch(() => { });
           console.log(`[pirate] ${message.author.username} won ${pirateAmount} pandas (rank ${authorRank >= 0 ? authorRank + 1 : 'unranked'}, ${(chance * 100).toFixed(0)}% chance)`);
         }
       }
@@ -291,7 +310,8 @@ client.on('voiceStateUpdate', (oldState, newState) => {
     const actual = awardVoicePandas(guildId, userId, earned);
     if (actual > 0) {
       const username = newState.member?.user?.username ?? userId;
-      addPanda(guildId, userId, username, actual);
+      const displayName = newState.member?.displayName || username;
+      addPanda(guildId, userId, username, actual, displayName);
       addPendingReaction(guildId, userId, PANDA_EMOJI_NAME, actual, 'voice');
       logPandaAward(guildId, userId, username, actual, 'voice');
       checkLastPlaceBoost(guildId, userId, logPandaAward);

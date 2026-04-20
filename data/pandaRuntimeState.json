@@ -1,22 +1,22 @@
 {
   "1200231085838184478": {
-    "messageCount": 4,
-    "lastUserId": "782374950522585164",
-    "currentPandaThreshold": 32
+    "messageCount": 39,
+    "lastUserId": "430780896019218433",
+    "currentPandaThreshold": 40
   },
   "1466962277415649341": {
-    "messageCount": 30,
-    "lastUserId": "701474314624434176",
+    "messageCount": 7,
+    "lastUserId": "1308092019343626292",
     "currentPandaThreshold": 38
   },
   "694912331267964961": {
-    "messageCount": 30,
-    "lastUserId": "1368037529399328768",
-    "currentPandaThreshold": 35
+    "messageCount": 16,
+    "lastUserId": "1363912627398508695",
+    "currentPandaThreshold": 36
   },
   "1468304553547141297": {
-    "messageCount": 26,
-    "lastUserId": "734163381908406283",
-    "currentPandaThreshold": 32
+    "messageCount": 22,
+    "lastUserId": "997212384781406208",
+    "currentPandaThreshold": 39
   }
 }

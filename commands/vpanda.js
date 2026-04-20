@@ -1,4 +1,6 @@
 const { getVictoryLeaderboard } = require('../utils/victoryStorage');
+const { startTimer, endTimer } = require('../utils/perfMetrics');
+const { getDisplayName } = require('../utils/memberDisplayNames');
 
 const VICTORY_EMOJI_NAME = 'SN_VictoryPanda';
 
@@ -6,6 +8,7 @@ module.exports = {
   name: 'vpanda',
   description: 'View the victory panda leaderboard',
   async execute(message, args) {
+    const vpandaStartTime = startTimer();
     const subcommand = args[0]?.toLowerCase();
 
     if (subcommand && subcommand !== 'list') {
@@ -25,17 +28,13 @@ module.exports = {
 
     for (let i = 0; i < leaderboard.length; i++) {
       const entry = leaderboard[i];
-      let displayName = entry.username;
-
-      try {
-        const member = await message.guild.members.fetch(entry.userId);
-        displayName = member.displayName || entry.username;
-      } catch {
-        // Member not in server — use stored username
-      }
-
+      const member = message.guild.members.cache.get(entry.userId);
+      const displayName = getDisplayName(message.guild.id, entry.userId, member, entry.username, entry.displayName);
       response += `${i + 1}. ${displayName} — ${emojiStr.repeat(entry.victories)}\n`;
     }
+
+    const vpandaDuration = endTimer(vpandaStartTime);
+    response += `\n_⏱️ Response time: ${vpandaDuration}ms_`;
 
     message.reply(response);
   }

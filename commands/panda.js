@@ -1,5 +1,7 @@
 const { addPanda, getPandaCount, getLeaderboard, getStaffHidden, setStaffHidden } = require('../utils/pandaStorage');
 const { getVictoriesMap } = require('../utils/victoryStorage');
+const { startTimer, endTimer } = require('../utils/perfMetrics');
+const { getDisplayName } = require('../utils/memberDisplayNames');
 
 const PANDA_EMOJI_NAME = 'SN_RooHappi';
 const SOCIALS_GUILD_ID = process.env.SOCIALS_GUILD_ID || '';
@@ -41,6 +43,8 @@ const subcommands = {
   },
 
   async list(message) {
+    const listStartTime = startTimer();
+    
     // Cooldown check
     const now = Date.now();
     const lastUsed = listCooldowns.get(message.author.id) || 0;
@@ -53,11 +57,16 @@ const subcommands = {
     const staffHidden = getStaffHidden(message.guild.id);
 
     // Fetch more entries than needed to account for staff filtering
+    const t1 = Date.now();
     const leaderboard = getLeaderboard(message.guild.id, 25);
+    const t2 = Date.now();
+    
     const pandaEmoji = getPandaEmoji(message.guild);
+    const t3 = Date.now();
     const victoryEmojiObj = message.guild.emojis.cache.find(e => e.name === 'SN_VictoryPanda');
     const victoryEmojiStr = victoryEmojiObj ? victoryEmojiObj.toString() : '🏆';
     const victoriesMap = getVictoriesMap(message.guild.id);
+    const t4 = Date.now();
 
     if (leaderboard.length === 0) {
       return message.reply('No pandas have been collected yet!');
@@ -66,29 +75,25 @@ const subcommands = {
     let response = `${pandaEmoji} **Leaderboard** ${pandaEmoji}\n\n`;
     let rank = 0;
 
+    const t5 = Date.now();
     for (const entry of leaderboard) {
       if (rank >= 10) break;
 
-      let member = null;
-      try {
-        member = await message.guild.members.fetch(entry.userId);
-      } catch {
-        // Member not in server — skip (they should be marked left, but just in case)
-        continue;
-      }
-
-      const memberIsStaff = isStaff(member);
+      // Get cached member (in-memory, no API calls)
+      const member = message.guild.members.cache.get(entry.userId);
+      const memberIsStaff = member ? isStaff(member) : false;
 
       // Skip staff if hidden
       if (staffHidden && memberIsStaff) continue;
 
       rank++;
-      const displayName = member.displayName || entry.username || 'Unknown User';
+      const displayName = getDisplayName(message.guild.id, entry.userId, member, entry.username, entry.displayName);
       const rankDisplay = memberIsStaff ? `**${rank}**` : `${rank}`;
       const victories = victoriesMap[entry.userId] || 0;
       const victoryBadge = victories > 0 ? ` ${victoryEmojiStr.repeat(victories)}` : '';
       response += `${rankDisplay}. ${displayName} - ${entry.count}${victoryBadge}\n`;
     }
+    const t6 = Date.now();
 
     if (rank === 0) {
       response += '_No entries to display._';
@@ -97,6 +102,9 @@ const subcommands = {
     if (staffHidden) {
       response += `\n_Staff members are currently hidden from the leaderboard._`;
     }
+
+    const listDuration = endTimer(listStartTime);
+    response += `\n_⏱️ Response time: ${listDuration}ms | getLeaderboard: ${t2-t1}ms | victoryMap: ${t4-t3}ms | fetchMembers: ${t6-t5}ms_`;
 
     message.reply(response);
   },
@@ -160,3 +168,4 @@ module.exports = {
     await subcommands[subcommand](message, args.slice(1));
   }
 };
+

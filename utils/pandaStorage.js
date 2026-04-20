@@ -15,6 +15,15 @@ function loadData() {
     }
     const raw = fs.readFileSync(DATA_FILE, 'utf-8');
     pandaCache = JSON.parse(raw);
+    // Simple migration: fill in missing displayNames with usernames (detailed migration happens on bot ready)
+    for (const guildId in pandaCache) {
+      for (const userId in pandaCache[guildId]) {
+        const entry = pandaCache[guildId][userId];
+        if (entry && typeof entry === 'object' && !entry.displayName && entry.username) {
+          entry.displayName = entry.username;
+        }
+      }
+    }
     return pandaCache;
   } catch (err) {
     console.error('Error loading panda data:', err);
@@ -22,6 +31,7 @@ function loadData() {
     return pandaCache;
   }
 }
+
 
 function saveData(data) {
   try {
@@ -41,7 +51,7 @@ function saveData(data) {
   }
 }
 
-function addPanda(guildId, userId, username, amount = 1) {
+function addPanda(guildId, userId, username, amount = 1, displayName = null) {
   const data = loadData();
 
   if (!data[guildId]) {
@@ -51,12 +61,16 @@ function addPanda(guildId, userId, username, amount = 1) {
   if (!data[guildId][userId]) {
     data[guildId][userId] = {
       username: username,
+      displayName: displayName || username,
       count: 0
     };
   }
 
   data[guildId][userId].count += amount;
   data[guildId][userId].username = username; // Update username in case it changed
+  if (displayName) {
+    data[guildId][userId].displayName = displayName; // Update display name if provided
+  }
 
   // If they were marked as left (e.g. rejoined and got a panda), clear the flag
   if (data[guildId][userId].left) {
@@ -175,6 +189,67 @@ function resetAllPandas() {
   saveData({});
 }
 
+/**
+ * Update a member's display name in the panda data.
+ * Called when a member changes their nickname (guildMemberUpdate event).
+ */
+function updateMemberDisplayName(guildId, userId, displayName) {
+  const data = loadData();
+  if (data[guildId]?.[userId]) {
+    data[guildId][userId].displayName = displayName;
+    saveData(data);
+  }
+}
+
+/**
+ * Run migration with guild context to backfill displayNames with actual server nicknames.
+ * Fetches leaderboard members from Discord to populate nicknames.
+ * Call this after bot is ready and has guild caches populated.
+ */
+async function migrateDisplayNamesWithGuilds(client) {
+  const data = loadData();
+  let needsSave = false;
+  
+  for (const guildId in data) {
+    const guild = client.guilds.cache.get(guildId);
+    if (!guild) continue;
+    
+    // Collect all userIds that need display names
+    const userIds = Object.keys(data[guildId] || {});
+    
+    // Fetch them all from Discord
+    if (userIds.length > 0) {
+      try {
+        const members = await guild.members.fetch({ user: userIds });
+        for (const userId in data[guildId]) {
+          const entry = data[guildId][userId];
+          if (entry && typeof entry === 'object' && (!entry.displayName || entry.displayName === entry.username)) {
+            const member = members.get(userId);
+            if (member) {
+              entry.displayName = member.displayName || member.user.username;
+              needsSave = true;
+            }
+          }
+        }
+      } catch (err) {
+        console.warn(`[pandaStorage] Could not fetch members for guild ${guildId}:`, err.message);
+      }
+    }
+  }
+  
+  if (needsSave) {
+    try {
+      const tempFile = `${DATA_FILE}.tmp`;
+      fs.writeFileSync(tempFile, JSON.stringify(data, null, 2));
+      fs.renameSync(tempFile, DATA_FILE);
+      pandaCache = data;
+      console.log('[pandaStorage] Migrated displayNames with fetched guild nicknames');
+    } catch (err) {
+      console.error('[pandaStorage] Failed to save migration:', err);
+    }
+  }
+}
+
 module.exports = {
   addPanda,
   deductPandas,
@@ -186,4 +261,6 @@ module.exports = {
   restoreMember,
   getStaffHidden,
   setStaffHidden,
+  updateMemberDisplayName,
+  migrateDisplayNamesWithGuilds,
 };

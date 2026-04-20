@@ -1,5 +1,3 @@
-const fs = require('fs');
-const path = require('path');
 const partnerConfig = require('../data/partnerChannels.json');
 
 // Store last sent message IDs for each channel (for deletion feature)
@@ -9,33 +7,70 @@ const lastSentMessages = {};
 const showAdsUsage = new Map();
 const SHOW_ADS_MAX = 3;
 const SHOW_ADS_WINDOW_MS = 60 * 60 * 1000; // 1 hour
+const DEFAULT_ADS_SOURCE_GUILD_ID = '694912331267964961';
+const DEFAULT_ADS_SOURCE_CHANNEL_ID = '1495529613181452308';
+
+function getAdsSourceConfig() {
+  return {
+    guildId: process.env.SOCIALS_GUILD_ID || DEFAULT_ADS_SOURCE_GUILD_ID,
+    channelId: process.env.SOCIALS_GUILD_SERVER_ADS_CHANNEL_ID || DEFAULT_ADS_SOURCE_CHANNEL_ID
+  };
+}
 
 /**
- * Checks if a user shares at least one guild with the bot (from the 6 partner servers).
+ * Fetches all messages from the configured Socials ads channel.
  */
-async function hasSharedGuild(client, userId) {
-  for (const partner of partnerConfig.channels) {
-    const guild = client.guilds.cache.get(partner.serverId);
-    if (!guild) continue;
-    try {
-      await guild.members.fetch(userId);
-      return true;
-    } catch { continue; }
+async function fetchAllAdsMessages(client) {
+  const { guildId, channelId } = getAdsSourceConfig();
+
+  if (!channelId) {
+    throw new Error('SOCIALS_GUILD_SERVER_ADS_CHANNEL_ID is not configured');
   }
-  return false;
+
+  let channel;
+  try {
+    channel = await client.channels.fetch(channelId);
+  } catch {
+    channel = null;
+  }
+
+  // Fallback path for cases where direct channel fetch fails due cache/access state.
+  if (!channel && guildId) {
+    const guild = client.guilds.cache.get(guildId) || await client.guilds.fetch(guildId).catch(() => null);
+    if (guild) {
+      channel = await guild.channels.fetch(channelId).catch(() => null);
+    }
+  }
+
+  if (!channel || !channel.isTextBased() || !channel.messages?.fetch) {
+    throw new Error(`Ads source channel not accessible/text-based (guildId=${guildId}, channelId=${channelId})`);
+  }
+
+  if (guildId && channel.guildId && channel.guildId !== guildId) {
+    throw new Error(`Ads source channel is in unexpected guild (expected=${guildId}, actual=${channel.guildId})`);
+  }
+
+  const allMessages = [];
+  let before;
+
+  while (true) {
+    const batch = await channel.messages.fetch({ limit: 100, before });
+    if (!batch.size) break;
+
+    allMessages.push(...batch.values());
+
+    if (batch.size < 100) break;
+    before = batch.last().id;
+  }
+
+  allMessages.sort((a, b) => a.createdTimestamp - b.createdTimestamp);
+  return allMessages;
 }
 
 /**
  * Handles the !show ads command in DMs.
  */
 async function handleShowAds(message, client) {
-  // Check mutual server
-  const shared = await hasSharedGuild(client, message.author.id);
-  if (!shared) {
-    await message.reply('❌ You must be in one of our servers to use this.');
-    return;
-  }
-
   // Rate limit
   const now = Date.now();
   const usage = (showAdsUsage.get(message.author.id) || []).filter(t => now - t < SHOW_ADS_WINDOW_MS);
@@ -48,16 +83,45 @@ async function handleShowAds(message, client) {
   usage.push(now);
   showAdsUsage.set(message.author.id, usage);
 
-  // Send each ad as a separate message
-  for (const partner of partnerConfig.channels) {
-    if (!partner.adFile) continue;
+  let adsMessages;
+  try {
+    adsMessages = await fetchAllAdsMessages(client);
+  } catch (err) {
+    console.error('[showAds] Failed to fetch ads source messages:', err.message);
+    await message.reply('❌ Ads are temporarily unavailable. Please try again later.');
+    return;
+  }
+
+  if (!adsMessages.length) {
+    await message.reply('ℹ️ No ads are currently available.');
+    return;
+  }
+
+  let sentCount = 0;
+
+  // Send each ad-channel message as a separate DM (oldest -> newest)
+  for (const adMessage of adsMessages) {
     try {
-      const adPath = path.join(__dirname, '../data/ads', partner.adFile);
-      const adText = fs.readFileSync(adPath, 'utf-8');
-      await message.author.send(adText);
+      const files = [...adMessage.attachments.values()].map(a => a.url);
+      const hasContent = Boolean(adMessage.content && adMessage.content.trim().length > 0);
+      const hasEmbeds = adMessage.embeds.length > 0;
+      const hasFiles = files.length > 0;
+
+      if (!hasContent && !hasEmbeds && !hasFiles) continue;
+
+      await message.author.send({
+        content: hasContent ? adMessage.content : undefined,
+        embeds: hasEmbeds ? adMessage.embeds : undefined,
+        files: hasFiles ? files : undefined
+      });
+      sentCount++;
     } catch (err) {
-      console.error(`[showAds] Failed to send ad for ${partner.name}:`, err.message);
+      console.error(`[showAds] Failed to send ad message ${adMessage.id}:`, err.message);
     }
+  }
+
+  if (sentCount === 0) {
+    await message.reply('ℹ️ No sendable ads were found in the ads channel.');
   }
 }
 
@@ -68,7 +132,7 @@ async function handlePartnerDM(message, client) {
   if (message.guild) return false;
   if (message.author.bot) return false;
 
-  // !show ads — available to anyone with a mutual server
+  // !show ads — available to anyone who can DM the bot
   if (message.content.trim().toLowerCase() === '!show ads') {
     await handleShowAds(message, client);
     return true;
@@ -101,7 +165,7 @@ async function handlePartnerDM(message, client) {
   for (const partner of partnerConfig.channels) {
     try {
       const channel = await client.channels.fetch(partner.channelId);
-      
+
       if (!channel) {
         results.push({
           name: partner.name,
@@ -113,7 +177,7 @@ async function handlePartnerDM(message, client) {
 
       // Send the message content exactly as received (preserves formatting)
       const sentMessage = await channel.send(content);
-      
+
       // Store message ID for potential deletion (keep last 3 per channel)
       if (!lastSentMessages[partner.channelId]) {
         lastSentMessages[partner.channelId] = [];
@@ -123,7 +187,7 @@ async function handlePartnerDM(message, client) {
       if (lastSentMessages[partner.channelId].length > 3) {
         lastSentMessages[partner.channelId].shift();
       }
-      
+
       results.push({
         name: partner.name,
         success: true
@@ -142,7 +206,7 @@ async function handlePartnerDM(message, client) {
   if (wasSanitized) {
     confirmationMsg += '⚠️ `@everyone` / `@here` was removed from your message before broadcasting.\n\n';
   }
-  
+
   for (const result of results) {
     if (result.success) {
       confirmationMsg += `✅ **${result.name}** - Sent successfully\n`;
@@ -156,7 +220,7 @@ async function handlePartnerDM(message, client) {
 
   // Send confirmation back to user
   await message.reply(confirmationMsg);
-  
+
   return true;
 }
 
@@ -171,7 +235,7 @@ async function handleDeleteLast(message, client) {
   for (const partner of partnerConfig.channels) {
     try {
       const channel = await client.channels.fetch(partner.channelId);
-      
+
       if (!channel) {
         results.push({
           name: partner.name,
