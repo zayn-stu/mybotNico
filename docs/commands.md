@@ -7,28 +7,26 @@
 ## ping
 - `!ping` - Check bot responsiveness
 
+## recording
+- `!record` - Show screen recording status and command help
+- `!record on` - Start capturing the visible prejoined Discord call window (bot owners only)
+- `!clip [note]` - Save a composited MP4 screen clip: 60 seconds before the command plus 20 seconds after
+- `!record off` - Stop screen recording and finalize pending clips (bot owners only)
+
 ## role
-- `!role set "name" color` - Create a standard role
-- `!role set "name" color1 color2` - Create a gradient role
+- `!role menu` - Create or edit your custom role with the interactive menu
 - `!role delete` - Delete your custom role
-- `!role edit name "new name"` - Rename your role
-- `!role edit color {color}` - Change to standard color
-- `!role edit color {color1} {color2}` - Change to gradient
 - `!role info` - Show your role details
 - `!role info "name"` - Show a specific role's details
 - `!role help` - Show role commands
 
 ### Admin Commands (Manage Roles permission)
-- `!role create {name} {color}` - Create unowned role
-- `!role create {name} {color1} {color2}` - Create unowned gradient role
-- `!role set @user {name} {color}` - Create/assign role to user
-- `!role set @user {name} {color1} {color2}` - Gradient for user
-- `!role set @user {existing role}` - Assign existing unowned role
+- `!role menu create` - Create an unowned role
+- `!role menu @user` - Assign or edit a user's role
 - `!role set @user none` - Unassign role from user (keeps role)
 - `!role delete {role}` - Delete any role
-- `!role edit name {role} to {new name}` - Rename any role
-- `!role edit color {role} {color}` - Change any role's color
-- `!role edit color {role} {color1} {color2}` - Gradient for any role
+- `!role sync` - Sync tracked color roles from Discord
+- `!role cleanup` - Delete orphaned color roles
 
 **Note:** Gradient colors must be different. Server requires ENHANCED_ROLE_COLORS feature for gradients. Admins cannot modify roles belonging to higher-ranked users.
 
@@ -36,6 +34,12 @@
 - `!panda` or `!panda me` - Check your panda count
 - `!panda list` - View top 10 leaderboard
 - `!panda help` - Show panda commands
+
+## Nico's Cave
+- `!play` - Run one dungeon raid. Players get 10 raids per Europe/Istanbul day.
+- `!store` - Open the gear store with buy buttons.
+- `!profile` - Show your level, coins, XP, equipped gear, stats, depth, and raids left.
+- `!inventory` - View owned gear/materials and equip, unequip, or sell items.
 
 ## reset (owner-only)
 - `!reset pandas` - Reset panda leaderboard data

@@ -1,8 +1,8 @@
 const { EmbedBuilder } = require('discord.js');
-const { COLOR_NAMES } = require('../utils/colors');
-const { isColorRole, removeRole } = require('../utils/roleStorage');
+const { COLOR_NAMES } = require('../features/roles/colors');
+const { isColorRole, removeRole } = require('../features/roles/storage');
 const { saveColorRoleForMember } = require('../utils/memberRoleMemory');
-const { markMemberLeft } = require('../utils/pandaStorage');
+const { markMemberLeft } = require('../features/pandas/storage');
 
 function getMemberLeaveLogChannelId() {
   return process.env.MEMBER_LEAVE_LOG_CHANNEL_ID || null;

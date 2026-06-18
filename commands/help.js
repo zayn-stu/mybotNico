@@ -8,20 +8,17 @@ module.exports = {
       return message.reply(
         '**Admin Commands** (Manage Roles permission):\n\n' +
         '**Role Management:**\n' +
-        '`!role create {name} {color}` - Create unowned role\n' +
-        '`!role create {name} {color1} {color2}` - Create unowned gradient role\n' +
-        '`!role set @user {name} {color}` - Create/assign role to user\n' +
-        '`!role set @user {name} {color1} {color2}` - Gradient for user\n' +
-        '`!role set @user {existing role}` - Assign existing unowned role\n' +
+        '`!role menu create` - Create an unowned role\n' +
+        '`!role menu @user` - Assign or edit a user role\n' +
         '`!role set @user none` - Unassign role from user (keeps role)\n' +
         '`!role delete {role}` - Delete any role\n' +
-        '`!role edit name {role} to {new name}` - Rename any role\n' +
-        '`!role edit color {role} {color}` - Change any role\'s color\n' +
-        '`!role edit color {role} {color1} {color2}` - Gradient for any role\n\n' +
+        '`!role sync` - Sync tracked color roles from Discord\n' +
+        '`!role cleanup` - Delete orphaned color roles\n\n' +
         '**Moderation Commands:**\n' +
         '`!purge {count}` - Delete the last {count} messages (1-100)\n\n' +
         '**Owner Commands:**\n' +
-        '`!reset pandas` - Reset panda leaderboard data\n\n' +
+        '`!reset pandas` - Reset panda leaderboard data\n' +
+        '`!record on` / `!record off` - Start or stop screen recording\n\n' +
         '**Note:** Admins cannot modify roles belonging to higher-ranked users.'
       );
     }
@@ -33,6 +30,17 @@ module.exports = {
       '  • `!role help` - See all role commands\n\n' +
       '**!panda** - Panda collection system\n' +
       '  • `!panda help` - See all panda commands\n\n' +
+      '**Voice**\n' +
+      '  • `!join` - Join your current voice channel\n' +
+      '  • `!join <voice_channel_id>` - Join a specific voice channel\n' +
+      '  • `!leave` - Leave voice chat\n' +
+      '  • `!record` - Show screen recording status\n' +
+      '  • `!clip [note]` - Save a screen clip from the active recording\n\n' +
+      '**Nico\'s Cave** - Dungeon raid game\n' +
+      '  • `!play` - Run a dungeon raid\n' +
+      '  • `!store` - Buy gear\n' +
+      '  • `!profile` - View stats and equipped gear\n' +
+      '  • `!inventory` - Equip, unequip, and sell items\n\n' +
       '**!imitate** @user {message} - Send a message as another user\n\n' +
       '**!help admin** - See admin-only commands\n'
     );

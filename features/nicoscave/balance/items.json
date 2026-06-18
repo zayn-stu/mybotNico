@@ -1,0 +1,101 @@
+{
+  "wood_sword": {
+    "id": "wood_sword",
+    "name": "Wood Sword",
+    "type": "gear",
+    "slot": "weapon",
+    "assetPath": "assets/images/swords/wood_sword.png",
+    "stats": {
+      "attack": 5
+    },
+    "starter": true,
+    "store": false,
+    "sellValue": 5
+  },
+  "stone_sword": {
+    "id": "stone_sword",
+    "name": "Stone Sword",
+    "type": "gear",
+    "slot": "weapon",
+    "assetPath": "assets/images/swords/stone_sword.png",
+    "stats": {
+      "attack": 12
+    },
+    "store": true,
+    "buyPrice": 100,
+    "sellValue": 40
+  },
+  "gold_sword": {
+    "id": "gold_sword",
+    "name": "Gold Sword",
+    "type": "gear",
+    "slot": "weapon",
+    "assetPath": "assets/images/swords/gold_sword.png",
+    "stats": {
+      "attack": 25
+    },
+    "store": true,
+    "buyPrice": 450,
+    "sellValue": 180
+  },
+  "wood_pickaxe": {
+    "id": "wood_pickaxe",
+    "name": "Wood Pickaxe",
+    "type": "gear",
+    "slot": "tool",
+    "assetPath": "assets/images/pickaxes/wood_pickaxe.png",
+    "stats": {
+      "mining": 4
+    },
+    "starter": true,
+    "store": false,
+    "sellValue": 5
+  },
+  "stone_pickaxe": {
+    "id": "stone_pickaxe",
+    "name": "Stone Pickaxe",
+    "type": "gear",
+    "slot": "tool",
+    "assetPath": "assets/images/pickaxes/stone_pickaxe.png",
+    "stats": {
+      "mining": 10
+    },
+    "store": true,
+    "buyPrice": 90,
+    "sellValue": 36
+  },
+  "gold_pickaxe": {
+    "id": "gold_pickaxe",
+    "name": "Gold Pickaxe",
+    "type": "gear",
+    "slot": "tool",
+    "assetPath": "assets/images/pickaxes/gold_pickaxe.png",
+    "stats": {
+      "mining": 22
+    },
+    "store": true,
+    "buyPrice": 420,
+    "sellValue": 168
+  },
+  "coin": {
+    "id": "coin",
+    "name": "Coin",
+    "type": "currency",
+    "assetPath": "assets/images/gems/coin.png",
+    "sellValue": 0
+  },
+  "iron": {
+    "id": "iron",
+    "name": "Iron",
+    "type": "material",
+    "assetPath": "assets/images/gems/iron.png",
+    "sellValue": 8
+  },
+  "gold": {
+    "id": "gold",
+    "name": "Gold",
+    "type": "material",
+    "assetPath": "assets/images/gems/gold.png",
+    "sellValue": 18
+  }
+}

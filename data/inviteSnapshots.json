@@ -1,0 +1,202 @@
+{
+  "694912331267964961": {
+    "updatedAt": 1781781243825,
+    "invites": [
+      {
+        "code": "3WrQREzzK",
+        "uses": 0,
+        "inviterId": "442173500237545474",
+        "inviterBot": false,
+        "channelId": "694912331729207421",
+        "maxUses": 0,
+        "temporary": false
+      },
+      {
+        "code": "7dt8EEzN",
+        "uses": 0,
+        "inviterId": "1363912627398508695",
+        "inviterBot": false,
+        "channelId": "694912331729207421",
+        "maxUses": 0,
+        "temporary": false
+      },
+      {
+        "code": "7kxAujXS",
+        "uses": 0,
+        "inviterId": "291516374889660417",
+        "inviterBot": false,
+        "channelId": "694912331729207421",
+        "maxUses": 0,
+        "temporary": false
+      },
+      {
+        "code": "MZrBqxqbgB",
+        "uses": 7,
+        "inviterId": "285660957110304769",
+        "inviterBot": false,
+        "channelId": "1414628197290606633",
+        "maxUses": 0,
+        "temporary": false
+      },
+      {
+        "code": "Pfddewwt",
+        "uses": 1,
+        "inviterId": "275598669246496769",
+        "inviterBot": false,
+        "channelId": "694912331729207421",
+        "maxUses": 0,
+        "temporary": false
+      },
+      {
+        "code": "TxWxQWAJbP",
+        "uses": 299,
+        "inviterId": "285660957110304769",
+        "inviterBot": false,
+        "channelId": "1158086152805425162",
+        "maxUses": 0,
+        "temporary": false
+      },
+      {
+        "code": "UyfHKfgd2",
+        "uses": 0,
+        "inviterId": "1363912627398508695",
+        "inviterBot": false,
+        "channelId": "694912331729207421",
+        "maxUses": 0,
+        "temporary": false
+      },
+      {
+        "code": "bWZ9jB6tp",
+        "uses": 0,
+        "inviterId": "378068252011528193",
+        "inviterBot": false,
+        "channelId": "694912331729207421",
+        "maxUses": 0,
+        "temporary": false
+      },
+      {
+        "code": "kzm6QZRZ",
+        "uses": 1,
+        "inviterId": "1324247424851644416",
+        "inviterBot": false,
+        "channelId": "1158086228793634906",
+        "maxUses": 0,
+        "temporary": false
+      },
+      {
+        "code": "sFkUkK2R",
+        "uses": 0,
+        "inviterId": "275598669246496769",
+        "inviterBot": false,
+        "channelId": "694929158211633252",
+        "maxUses": 0,
+        "temporary": false
+      },
+      {
+        "code": "sQ8whmkj4",
+        "uses": 0,
+        "inviterId": "1368037529399328768",
+        "inviterBot": false,
+        "channelId": "694912331729207421",
+        "maxUses": 0,
+        "temporary": false
+      },
+      {
+        "code": "uYddrAq9CB",
+        "uses": 28,
+        "inviterId": "302050872383242240",
+        "inviterBot": true,
+        "channelId": "1158086152805425162",
+        "maxUses": 0,
+        "temporary": false
+      }
+    ],
+    "vanity": {
+      "code": "sn17",
+      "uses": 48
+    }
+  },
+  "1499043480243011794": {
+    "updatedAt": 1781781243825,
+    "invites": [
+      {
+        "code": "HXffq7Hkd",
+        "uses": 1,
+        "inviterId": "636610425026379787",
+        "inviterBot": false,
+        "channelId": "1499061683614912633",
+        "maxUses": 0,
+        "temporary": false
+      },
+      {
+        "code": "Mda3SUam5E",
+        "uses": 12,
+        "inviterId": "308323965762273280",
+        "inviterBot": false,
+        "channelId": "1499061683614912633",
+        "maxUses": 0,
+        "temporary": false
+      },
+      {
+        "code": "RNScpPD5P",
+        "uses": 0,
+        "inviterId": "450292245367619596",
+        "inviterBot": false,
+        "channelId": "1499065955085451408",
+        "maxUses": 0,
+        "temporary": false
+      },
+      {
+        "code": "aEpZdeGJHc",
+        "uses": 212,
+        "inviterId": "302050872383242240",
+        "inviterBot": true,
+        "channelId": "1499069071780479077",
+        "maxUses": 0,
+        "temporary": false
+      },
+      {
+        "code": "crQM8Q86C",
+        "uses": 0,
+        "inviterId": "1135759879936688240",
+        "inviterBot": false,
+        "channelId": "1499069185660289105",
+        "maxUses": 0,
+        "temporary": false
+      },
+      {
+        "code": "nhKt5mUHwQ",
+        "uses": 26,
+        "inviterId": "1358808133543264306",
+        "inviterBot": false,
+        "channelId": "1499067339008639137",
+        "maxUses": 0,
+        "temporary": false
+      },
+      {
+        "code": "yqFP44ZqP",
+        "uses": 1,
+        "inviterId": "835296757235712010",
+        "inviterBot": false,
+        "channelId": "1499067339008639137",
+        "maxUses": 0,
+        "temporary": false
+      },
+      {
+        "code": "zTf7V9j2S",
+        "uses": 0,
+        "inviterId": "1501340005451169812",
+        "inviterBot": false,
+        "channelId": "1499067339008639137",
+        "maxUses": 0,
+        "temporary": false
+      }
+    ],
+    "vanity": null
+  },
+  "1466962277415649341": {
+    "updatedAt": 1781781243825,
+    "invites": [],
+    "vanity": null
+  }
+}

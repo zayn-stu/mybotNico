@@ -23,10 +23,33 @@ function parseArgs(content) {
   return args;
 }
 
-function handleCommand(message, prefix) {
-  if (!message.content.startsWith(prefix)) return;
+function escapeRegex(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
 
-  const content = message.content.slice(prefix.length);
+function getCommandContent(content, prefixes) {
+  const prefixList = Array.isArray(prefixes) ? prefixes : [prefixes];
+
+  for (const prefix of prefixList) {
+    if (!prefix) continue;
+
+    if (/^[a-z0-9]+$/i.test(prefix)) {
+      const trimmedContent = content.trimStart();
+      const match = trimmedContent.match(new RegExp(`^${escapeRegex(prefix)}(?:\\s+|$)`, 'i'));
+      if (match) return trimmedContent.slice(match[0].length).trimStart();
+      continue;
+    }
+
+    if (content.startsWith(prefix)) return content.slice(prefix.length);
+  }
+
+  return null;
+}
+
+async function handleCommand(message, prefix) {
+  const content = getCommandContent(message.content, prefix);
+  if (content === null) return;
+
   const args = parseArgs(content);
   const commandName = args.shift()?.toLowerCase();
 
@@ -34,11 +57,11 @@ function handleCommand(message, prefix) {
   if (!command) return;
 
   try {
-    command.execute(message, args);
+    await command.execute(message, args);
   } catch (error) {
     console.error(`Error executing ${commandName}:`, error);
-    message.reply('❌ Command error.');
+    await message.reply('❌ Command error.');
   }
 }
 
-module.exports = { loadCommands, handleCommand };
+module.exports = { loadCommands, handleCommand, parseArgs, getCommandContent };

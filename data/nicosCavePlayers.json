@@ -1,0 +1,80 @@
+{
+  "285660957110304769": {
+    "userId": "285660957110304769",
+    "username": "socially_",
+    "coins": 191,
+    "level": 2,
+    "xp": 129,
+    "unlockedDepth": 3,
+    "equipped": {
+      "tool": "g_mp36tg0s_618369",
+      "weapon": "g_mp36tg0s_2de153"
+    },
+    "inventory": {
+      "gear": {
+        "g_mp36tg0s_618369": {
+          "id": "g_mp36tg0s_618369",
+          "itemId": "wood_pickaxe",
+          "slot": "tool",
+          "acquiredAt": "2026-05-12T22:13:38.523Z",
+          "sellValue": 5
+        },
+        "g_mp36tg0s_2de153": {
+          "id": "g_mp36tg0s_2de153",
+          "itemId": "wood_sword",
+          "slot": "weapon",
+          "acquiredAt": "2026-05-12T22:13:38.523Z",
+          "sellValue": 5
+        }
+      },
+      "materials": {
+        "iron": 2
+      }
+    },
+    "raids": {
+      "dayKey": "2026-05-13",
+      "used": 3
+    },
+    "createdAt": "2026-05-12T22:13:38.523Z",
+    "updatedAt": "2026-05-12T22:21:26.796Z"
+  },
+  "1361904044750147595": {
+    "userId": "1361904044750147595",
+    "username": "sakuraswifo",
+    "coins": 59,
+    "level": 2,
+    "xp": 33,
+    "unlockedDepth": 2,
+    "equipped": {
+      "tool": "g_mp5j2a4e_967824",
+      "weapon": "g_mp5j2a4e_b5c32c"
+    },
+    "inventory": {
+      "gear": {
+        "g_mp5j2a4e_967824": {
+          "id": "g_mp5j2a4e_967824",
+          "itemId": "wood_pickaxe",
+          "slot": "tool",
+          "acquiredAt": "2026-05-14T13:31:58.526Z",
+          "sellValue": 5
+        },
+        "g_mp5j2a4e_b5c32c": {
+          "id": "g_mp5j2a4e_b5c32c",
+          "itemId": "wood_sword",
+          "slot": "weapon",
+          "acquiredAt": "2026-05-14T13:31:58.526Z",
+          "sellValue": 5
+        }
+      },
+      "materials": {
+        "iron": 4
+      }
+    },
+    "raids": {
+      "dayKey": "2026-05-14",
+      "used": 1
+    },
+    "createdAt": "2026-05-14T13:31:58.526Z",
+    "updatedAt": "2026-05-14T13:32:56.274Z"
+  }
+}

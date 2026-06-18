@@ -1,0 +1,185 @@
+{
+  "1200231085838184478": {
+    "ga_1777231192840_285660957110304769": {
+      "prize": "this dick",
+      "winnerCount": 1,
+      "durationRaw": "4m",
+      "endAtMs": 1777231416826,
+      "allowRoleIds": [
+        "1421565629999222845"
+      ],
+      "setupMessageId": "1498040834426142972",
+      "channelId": "1488104083834278008",
+      "giveawayMessageId": "1498040939023831193",
+      "status": "ended",
+      "createdAt": 1777231192840,
+      "hostId": "285660957110304769",
+      "endedAtMs": 1777232401316,
+      "winnerUserIds": [
+        "417755095862870027"
+      ]
+    },
+    "ga_1777232696725_285660957110304769": {
+      "prize": "more dick",
+      "winnerCount": 1,
+      "durationRaw": "5m",
+      "endAtMs": 1777232978165,
+      "allowRoleIds": [
+        "1421565629999222845",
+        "1496260047687254157",
+        "1493512891591032842",
+        "1472007675809103996",
+        "1495540983679549490",
+        "1422190904663478414"
+      ],
+      "setupMessageId": "1498047117753712772",
+      "channelId": "1488104083834278008",
+      "giveawayMessageId": "1498047247232008333",
+      "status": "ended",
+      "createdAt": 1777232696725,
+      "hostId": "285660957110304769",
+      "endedAtMs": 1777233004516,
+      "winnerUserIds": [
+        "417755095862870027"
+      ]
+    },
+    "ga_1777233047936_417755095862870027": {
+      "prize": "Warhammer Vermintide collectors edition",
+      "winnerCount": 1,
+      "durationRaw": "3days",
+      "endAtMs": 1777492211232,
+      "allowRoleIds": [
+        "1276472620283596960"
+      ],
+      "setupMessageId": "1498048445242540123",
+      "channelId": "1488104083834278008",
+      "giveawayMessageId": "1498048712948318269",
+      "status": "ended",
+      "createdAt": 1777233047936,
+      "hostId": "417755095862870027",
+      "endedAtMs": 1777492221049,
+      "winnerUserIds": [
+        "894081396459589652"
+      ]
+    },
+    "ga_1777327932204_417755095862870027": {
+      "prize": "Old World (world building strategy very autistic game)",
+      "winnerCount": 1,
+      "durationRaw": "7 days",
+      "endAtMs": 1777932673341,
+      "allowRoleIds": [
+        "1490279610708000859"
+      ],
+      "setupMessageId": "1498446288717611068",
+      "channelId": "1488104083834278008",
+      "giveawayMessageId": "1498446694390563131",
+      "status": "ended",
+      "createdAt": 1777327932204,
+      "hostId": "417755095862870027",
+      "endedAtMs": 1777932678441,
+      "winnerUserIds": [
+        "646856513142390805"
+      ]
+    },
+    "ga_1777492994278_417755095862870027": {
+      "prize": "Killing Floor 2 - Digital Deluxe Edition",
+      "winnerCount": 1,
+      "durationRaw": "10 days",
+      "endAtMs": 1778356966835,
+      "allowRoleIds": [
+        "1276472620283596960"
+      ],
+      "setupMessageId": "1499138766802129016",
+      "channelId": "1488104083834278008",
+      "giveawayMessageId": "1499139014098161889",
+      "status": "ended",
+      "createdAt": 1777492994278,
+      "hostId": "417755095862870027",
+      "endedAtMs": 1778356993477,
+      "winnerUserIds": [
+        "544764466278039574"
+      ]
+    },
+    "ga_1777764326965_417755095862870027": {
+      "prize": "UFO: Unidentified Falling Objects",
+      "winnerCount": 1,
+      "durationRaw": "1 day",
+      "endAtMs": 1777850675969,
+      "allowRoleIds": [
+        "1490279610708000859"
+      ],
+      "setupMessageId": "1500276773861064735",
+      "channelId": "1488104083834278008",
+      "giveawayMessageId": "1500277066099331183",
+      "status": "ended",
+      "createdAt": 1777764326965,
+      "hostId": "417755095862870027",
+      "endedAtMs": 1777850685526,
+      "winnerUserIds": [
+        "1161139935399657504"
+      ]
+    },
+    "ga_1778023557526_417755095862870027": {
+      "prize": "Out of Space",
+      "winnerCount": 1,
+      "durationRaw": "2 days",
+      "endAtMs": 1778196286767,
+      "allowRoleIds": [
+        "1490279898521272330",
+        "1490279853390303326",
+        "1490279820851024024",
+        "1490279766685913129"
+      ],
+      "setupMessageId": "1501363570171183244",
+      "channelId": "1488104083834278008",
+      "giveawayMessageId": "1501364358373052527",
+      "status": "ended",
+      "createdAt": 1778023557526,
+      "hostId": "417755095862870027",
+      "endedAtMs": 1778196307101,
+      "winnerUserIds": [
+        "417755095862870027"
+      ]
+    },
+    "ga_1778239242770_417755095862870027": {
+      "prize": "Out of space",
+      "winnerCount": 1,
+      "durationRaw": "2 days",
+      "endAtMs": 1778412000888,
+      "allowRoleIds": [
+        "1490279853390303326",
+        "1490279898521272330",
+        "1490279820851024024"
+      ],
+      "setupMessageId": "1502268769706311711",
+      "channelId": "1488104083834278008",
+      "giveawayMessageId": "1502269007145734174",
+      "status": "ended",
+      "createdAt": 1778239242770,
+      "hostId": "417755095862870027",
+      "endedAtMs": 1778412028451,
+      "winnerUserIds": []
+    }
+  },
+  "694912331267964961": {
+    "ga_1778442409451_1412340736871104572": {
+      "prize": "My Penis",
+      "winnerCount": 1,
+      "durationRaw": "1m",
+      "endAtMs": 1778442437491,
+      "allowRoleIds": [
+        "1476725006628163776"
+      ],
+      "setupMessageId": "1503120924327805109",
+      "channelId": "1158086152805425162",
+      "giveawayMessageId": "1503121150027239704",
+      "status": "ended",
+      "createdAt": 1778442409451,
+      "hostId": "1412340736871104572",
+      "endedAtMs": 1778442445463,
+      "winnerUserIds": [
+        "1412340736871104572"
+      ]
+    }
+  }
+}

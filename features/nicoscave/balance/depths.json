@@ -1,0 +1,131 @@
+[
+  {
+    "id": 1,
+    "name": "Moldy Tutorial Cave",
+    "requiredStats": {
+      "attack": 5,
+      "hp": 100,
+      "mining": 4
+    },
+    "baseRewards": {
+      "coins": 20,
+      "xp": 35
+    },
+    "drops": [
+      {
+        "itemId": "iron",
+        "weight": 100,
+        "min": 1,
+        "max": 2
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "Suspiciously Damp Hallway",
+    "requiredStats": {
+      "attack": 8,
+      "hp": 118,
+      "mining": 6
+    },
+    "baseRewards": {
+      "coins": 28,
+      "xp": 45
+    },
+    "drops": [
+      {
+        "itemId": "iron",
+        "weight": 90,
+        "min": 1,
+        "max": 3
+      },
+      {
+        "itemId": "gold",
+        "weight": 10,
+        "min": 1,
+        "max": 1
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "Rock With Opinions",
+    "requiredStats": {
+      "attack": 12,
+      "hp": 138,
+      "mining": 10
+    },
+    "baseRewards": {
+      "coins": 40,
+      "xp": 60
+    },
+    "drops": [
+      {
+        "itemId": "iron",
+        "weight": 80,
+        "min": 2,
+        "max": 4
+      },
+      {
+        "itemId": "gold",
+        "weight": 20,
+        "min": 1,
+        "max": 2
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "name": "Taxable Treasure Room",
+    "requiredStats": {
+      "attack": 17,
+      "hp": 160,
+      "mining": 14
+    },
+    "baseRewards": {
+      "coins": 55,
+      "xp": 80
+    },
+    "drops": [
+      {
+        "itemId": "iron",
+        "weight": 65,
+        "min": 2,
+        "max": 5
+      },
+      {
+        "itemId": "gold",
+        "weight": 35,
+        "min": 1,
+        "max": 2
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "name": "Definitely Final Boss Lobby",
+    "requiredStats": {
+      "attack": 25,
+      "hp": 185,
+      "mining": 20
+    },
+    "baseRewards": {
+      "coins": 75,
+      "xp": 110
+    },
+    "drops": [
+      {
+        "itemId": "iron",
+        "weight": 50,
+        "min": 3,
+        "max": 6
+      },
+      {
+        "itemId": "gold",
+        "weight": 50,
+        "min": 1,
+        "max": 3
+      }
+    ]
+  }
+]

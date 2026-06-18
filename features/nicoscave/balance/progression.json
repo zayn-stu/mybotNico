@@ -1,0 +1,27 @@
+{
+  "dailyRaidLimit": 10,
+  "timezone": "Europe/Istanbul",
+  "levelCap": 20,
+  "completion": {
+    "weights": {
+      "attack": 0.5,
+      "hp": 0.3,
+      "mining": 0.2
+    },
+    "ratioCap": 1.25,
+    "minCompletion": 5,
+    "jitterPercent": 5
+  },
+  "hp": {
+    "base": 100,
+    "linear": 16,
+    "powerMultiplier": 3,
+    "power": 1.3,
+    "overrides": {}
+  },
+  "xp": {
+    "base": 70,
+    "power": 1.45,
+    "roundTo": 5
+  }
+}

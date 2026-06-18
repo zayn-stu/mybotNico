@@ -1,0 +1,24 @@
+{
+  "raid": [
+    "You kicked down a cave door. The cave has filed a complaint.",
+    "A skeleton tried to monologue. You skipped the cutscene.",
+    "You found a treasure chest labeled totally not cursed.",
+    "The dungeon manager said this was not in the budget.",
+    "A slime challenged you to a duel and immediately regretted it."
+  ],
+  "low": [
+    "You survived, technically. The cave is still laughing.",
+    "The dungeon won this argument, but you kept some loot.",
+    "You called it a tactical retreat. Everyone else called it running."
+  ],
+  "good": [
+    "Clean raid. The cave is pretending it was lag.",
+    "You cleared enough rooms to make the dungeon nervous.",
+    "Solid work. The monsters are updating their resumes."
+  ],
+  "great": [
+    "Full dungeon accounting department meltdown. Excellent work.",
+    "You bullied the dungeon so hard it dropped premium loot.",
+    "The cave saw you coming and started packing."
+  ]
+}

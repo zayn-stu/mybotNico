@@ -164,6 +164,266 @@
           "count": 1
         }
       ]
+    },
+    "2": {
+      "roundNumber": 2,
+      "endedAt": "2026-04-26T17:27:06.302Z",
+      "winner": {
+        "userId": "1363912627398508695",
+        "username": "shmof06"
+      },
+      "leaderboard": [
+        {
+          "userId": "1363912627398508695",
+          "username": "shmof06",
+          "count": 266
+        },
+        {
+          "userId": "285660957110304769",
+          "username": "socially_",
+          "count": 186
+        },
+        {
+          "userId": "677890306234122250",
+          "username": "mkd0d0",
+          "count": 162
+        },
+        {
+          "userId": "1368037529399328768",
+          "username": "algerianjay",
+          "count": 97
+        },
+        {
+          "userId": "417755095862870027",
+          "username": "kjoet",
+          "count": 94
+        },
+        {
+          "userId": "430780896019218433",
+          "username": "_wou_",
+          "count": 90
+        },
+        {
+          "userId": "367045325380386817",
+          "username": "d_xter",
+          "count": 86
+        },
+        {
+          "userId": "898987825222012929",
+          "username": "_profy",
+          "count": 69
+        },
+        {
+          "userId": "1371796018273976410",
+          "username": "spiritwarri0r",
+          "count": 50
+        },
+        {
+          "userId": "378068252011528193",
+          "username": "redbullbitty",
+          "count": 48
+        },
+        {
+          "userId": "115823971529654273",
+          "username": "heyhaoyu",
+          "count": 39
+        },
+        {
+          "userId": "1326508590562807809",
+          "username": "480_0",
+          "count": 37
+        },
+        {
+          "userId": "1406143162526732379",
+          "username": "paigetriarchy.",
+          "count": 34
+        },
+        {
+          "userId": "1398940754117918750",
+          "username": "kindgoldenapples2",
+          "count": 33
+        },
+        {
+          "userId": "339200331395104770",
+          "username": "meeharhar",
+          "count": 33
+        },
+        {
+          "userId": "459049287133954058",
+          "username": "izachi",
+          "count": 31
+        },
+        {
+          "userId": "903346022414172202",
+          "username": "01012.",
+          "count": 30
+        },
+        {
+          "userId": "629683337945939989",
+          "username": "namamiiii",
+          "count": 29
+        },
+        {
+          "userId": "275598669246496769",
+          "username": "quns",
+          "count": 29
+        },
+        {
+          "userId": "1361904044750147595",
+          "username": "sakuraswifo",
+          "count": 28
+        },
+        {
+          "userId": "514331317467480065",
+          "username": "captainbiatxh",
+          "count": 27
+        },
+        {
+          "userId": "203714259971080192",
+          "username": "iambored0184",
+          "count": 25
+        },
+        {
+          "userId": "291516374889660417",
+          "username": "nerazore",
+          "count": 24
+        },
+        {
+          "userId": "1462630472059322529",
+          "username": "allycat_lucky.",
+          "count": 22
+        },
+        {
+          "userId": "544764466278039574",
+          "username": "symbolisticintensity",
+          "count": 21
+        },
+        {
+          "userId": "1290774249463746641",
+          "username": "greedyone_cr",
+          "count": 20
+        },
+        {
+          "userId": "784290563024617524",
+          "username": "joemama_22.",
+          "count": 19
+        },
+        {
+          "userId": "360853741307428885",
+          "username": "zetsutaro",
+          "count": 17
+        },
+        {
+          "userId": "199353596880355328",
+          "username": "penhiun",
+          "count": 16
+        },
+        {
+          "userId": "1414559824859107358",
+          "username": "suiigeneriss",
+          "count": 15
+        },
+        {
+          "userId": "528095709581410304",
+          "username": "sedon_",
+          "count": 13
+        },
+        {
+          "userId": "676804818131746827",
+          "username": "xxefy",
+          "count": 12
+        },
+        {
+          "userId": "1329531775919063083",
+          "username": "james1ey",
+          "count": 12
+        },
+        {
+          "userId": "722656101715280013",
+          "username": "jcoqb.3",
+          "count": 11
+        },
+        {
+          "userId": "1257917144000368754",
+          "username": "fawnscents",
+          "count": 11
+        },
+        {
+          "userId": "1486847231137939718",
+          "username": "goyprincess",
+          "count": 11
+        },
+        {
+          "userId": "1334594320564621384",
+          "username": "saelis.",
+          "count": 10
+        },
+        {
+          "userId": "260911657230925825",
+          "username": "cuntpie",
+          "count": 9
+        },
+        {
+          "userId": "520571680750305283",
+          "username": "nexuhang",
+          "count": 9
+        },
+        {
+          "userId": "949195112670449675",
+          "username": "silentvoin",
+          "count": 9
+        },
+        {
+          "userId": "393887476801994754",
+          "username": "mewmo",
+          "count": 9
+        },
+        {
+          "userId": "1232037612387307642",
+          "username": "thisapphatesmyguts",
+          "count": 9
+        },
+        {
+          "userId": "1002051356141551666",
+          "username": "kronchykat",
+          "count": 9
+        },
+        {
+          "userId": "300746153379495937",
+          "username": "serotonin.squish",
+          "count": 7
+        },
+        {
+          "userId": "1493629227864690890",
+          "username": "b.rownsnowman",
+          "count": 6
+        },
+        {
+          "userId": "1283959111968489533",
+          "username": "junified.",
+          "count": 3
+        },
+        {
+          "userId": "383331835595194368",
+          "username": "7883",
+          "count": 3
+        },
+        {
+          "userId": "269042773783609344",
+          "username": "littlered3428",
+          "count": 2
+        },
+        {
+          "userId": "1422746996120223966",
+          "username": "hammy_9976",
+          "count": 2
+        },
+        {
+          "userId": "1118623452417503283",
+          "username": "finalgirlxan",
+          "count": 1
+        }
+      ]
     }
   },
   "1466962277415649341": {

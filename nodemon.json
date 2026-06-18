@@ -1,8 +1,11 @@
 {
   "watch": [
     "index.js",
+    "bot/",
     "commands/",
+    "features/",
     "handlers/",
+    "shared/",
     "utils/",
     "data/"
   ],
@@ -16,12 +19,26 @@
     "data/pandaRuntimeState.json.tmp",
     "data/inviteRewards.json",
     "data/inviteRewards.json.tmp",
+    "data/inviteSnapshots.json",
+    "data/inviteSnapshots.json.tmp",
+    "data/verification.json",
+    "data/verification.json.tmp",
     "data/victoryPandas.json",
     "data/victoryPandas.json.tmp",
     "data/roundHistory.json",
     "data/roundHistory.json.tmp",
     "data/roles.json",
-    "data/roles.json.tmp"
+    "data/roles.json.tmp",
+    "data/bumpTracking.json",
+    "data/bumpTracking.json.tmp",
+    "data/voiceRewardTracking.json",
+    "data/voiceRewardTracking.json.tmp",
+    "data/voiceConnections.json",
+    "data/voiceConnections.json.tmp",
+    "data/memberRoles.json",
+    "data/memberRoles.json.tmp",
+    "data/pendingAds.json",
+    "data/pendingAds.json.tmp"
   ],
   "delay": 1000
 }

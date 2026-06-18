@@ -1,5 +1,5 @@
-const fs = require('fs');
 const path = require('path');
+const { readJsonFile, writeJsonFileAtomic } = require('../shared/jsonStore');
 
 const MEMORY_FILE = path.join(__dirname, '..', 'data', 'memberRoles.json');
 
@@ -7,26 +7,13 @@ let memoryCache = null;
 
 function loadMemory() {
   if (memoryCache !== null) return memoryCache;
-  try {
-    if (!fs.existsSync(MEMORY_FILE)) {
-      memoryCache = {};
-      return memoryCache;
-    }
-    memoryCache = JSON.parse(fs.readFileSync(MEMORY_FILE, 'utf8'));
-    return memoryCache;
-  } catch {
-    memoryCache = {};
-    return memoryCache;
-  }
+  memoryCache = readJsonFile(MEMORY_FILE, {});
+  return memoryCache;
 }
 
 function saveMemory(data) {
   try {
-    const dir = path.dirname(MEMORY_FILE);
-    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-    const tempFile = `${MEMORY_FILE}.tmp`;
-    fs.writeFileSync(tempFile, JSON.stringify(data, null, 2));
-    fs.renameSync(tempFile, MEMORY_FILE);
+    writeJsonFileAtomic(MEMORY_FILE, data, { ensureDirectory: true });
     memoryCache = data;
   } catch (err) {
     console.error('Error saving member role memory:', err);
