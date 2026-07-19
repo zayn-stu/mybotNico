@@ -8,6 +8,7 @@ const {
   StringSelectMenuBuilder,
   StringSelectMenuOptionBuilder,
   EmbedBuilder,
+  MessageFlags,
 } = require('discord.js');
 const { parseDuration } = require('./time');
 const { updateDraft, getDraft, getDraftAndClear } = require('./setupCache');
@@ -60,7 +61,7 @@ async function handleGiveawaySetupOpen(interaction) {
     console.error('[giveaway] Error showing modal:', err);
     await interaction.reply({
       content: '❌ Failed to open giveaway setup modal.',
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
   }
 }
@@ -74,7 +75,7 @@ async function handleGiveawaySetupModal(interaction) {
   if (!guild || !channel) {
     return interaction.reply({
       content: '❌ Cannot process giveaway setup.',
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
   }
 
@@ -87,7 +88,7 @@ async function handleGiveawaySetupModal(interaction) {
   if (!prize) {
     return interaction.reply({
       content: '❌ Prize cannot be empty.',
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
   }
 
@@ -96,7 +97,7 @@ async function handleGiveawaySetupModal(interaction) {
   if (isNaN(winnerCount) || winnerCount < 1) {
     return interaction.reply({
       content: '❌ Number of winners must be a positive integer.',
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
   }
 
@@ -105,7 +106,7 @@ async function handleGiveawaySetupModal(interaction) {
   if (durationMs === null) {
     return interaction.reply({
       content: '❌ Invalid duration. Use formats like 10m, 2h, 1d, etc.',
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
   }
 
@@ -145,13 +146,13 @@ async function handleGiveawaySetupModal(interaction) {
 
     await interaction.followUp({
       content: '✅ Setup saved! Now select eligible roles using the Constraints button.',
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
   } catch (err) {
     console.error('[giveaway] Error updating setup message:', err);
     await interaction.reply({
       content: '❌ Failed to save giveaway setup.',
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
   }
 }
@@ -165,7 +166,7 @@ async function handleGiveawayConstraintsOpen(interaction) {
   if (!guild) {
     return interaction.reply({
       content: '❌ Cannot access guild roles.',
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
   }
 
@@ -174,7 +175,7 @@ async function handleGiveawayConstraintsOpen(interaction) {
   if (!draft) {
     return interaction.reply({
       content: '❌ Setup data not found. Start over with `!giveaway setup`.',
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
   }
 
@@ -292,7 +293,7 @@ async function renderConstraintsPage(interaction, roleArray, currentPage, totalP
     if (!interaction.replied) {
       await interaction.reply({
         content: '❌ Failed to render role selection.',
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
     }
   }
@@ -307,7 +308,7 @@ async function handleGiveawayConstraintsSelect(interaction) {
   if (!guild) {
     return interaction.reply({
       content: '❌ Cannot process role selection.',
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
   }
 
@@ -316,7 +317,7 @@ async function handleGiveawayConstraintsSelect(interaction) {
   if (!draft) {
     return interaction.reply({
       content: '❌ Setup data not found.',
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
   }
 
@@ -372,7 +373,7 @@ async function handleGiveawayConstraintsPrev(interaction, pageStr) {
   if (!guild) {
     return interaction.reply({
       content: '❌ Cannot navigate roles.',
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
   }
 
@@ -383,7 +384,7 @@ async function handleGiveawayConstraintsPrev(interaction, pageStr) {
   if (!draft) {
     return interaction.reply({
       content: '❌ Setup data not found.',
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
   }
 
@@ -411,7 +412,7 @@ async function handleGiveawayConstraintsNext(interaction, pageStr) {
   if (!guild) {
     return interaction.reply({
       content: '❌ Cannot navigate roles.',
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
   }
 
@@ -422,7 +423,7 @@ async function handleGiveawayConstraintsNext(interaction, pageStr) {
   if (!draft) {
     return interaction.reply({
       content: '❌ Setup data not found.',
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
   }
 
@@ -452,7 +453,7 @@ async function handleGiveawayFinish(interaction) {
   if (!guild || !channel) {
     return interaction.reply({
       content: '❌ Cannot process giveaway finish.',
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
   }
 
@@ -461,7 +462,7 @@ async function handleGiveawayFinish(interaction) {
   if (!draft) {
     return interaction.reply({
       content: '❌ Setup data not found.',
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
   }
 
@@ -515,7 +516,7 @@ async function handleGiveawayFinish(interaction) {
     // Reply to user first
     await interaction.reply({
       content: '✅ Giveaway started! Members can react with 🎉 to enter.',
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
 
     // Delete the setup panel message (bot's message with Setup/Constraints/Finish buttons)
@@ -535,7 +536,7 @@ async function handleGiveawayFinish(interaction) {
     console.error('[giveaway] Error finishing giveaway:', err);
     await interaction.reply({
       content: `❌ Failed to start giveaway: ${err.message}`,
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
   }
 }

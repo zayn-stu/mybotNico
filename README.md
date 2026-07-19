@@ -10,7 +10,7 @@ A Discord bot built with [Discord.js v14](https://discord.js.org/) supporting mu
 - **Partner Broadcast** — Bot owners can DM the bot to broadcast a message to all configured partner server channels. Supports "delete last" to undo.
 - **Imitate** — Uses webhooks to send a message appearing as another user (name + avatar). Requires Manage Messages permission.
 - **Purge** — Bulk-deletes up to 100 messages with permission checks.
-- **Screen Recording** — Bot owners can capture a visible prejoined Discord call window, while members in the recorded voice channel can save MP4 clips with 60 seconds back plus 20 seconds forward.
+- **Voice Connections** — Owners can connect and disconnect the bot in Discord voice channels, with automatic reconnect handling.
 - **Help** — Layered help system with a user view and `!help admin` for admin commands.
 
 ## Required Bot Permissions
@@ -46,14 +46,7 @@ See `.env.example` for all required and optional variables:
 | `CLIENT_ID` | ✅ | Your bot's client ID |
 | `MEMBER_LEAVE_LOG_CHANNEL_ID` | ✅ | Channel ID for member leave logs |
 | `BOT_OWNER_IDS` | ✅ | Comma-separated user IDs for owner-only commands |
-| `FFMPEG_PATH` | Optional | Legacy fallback FFmpeg path |
-| `SCREEN_RECORDING_FFMPEG_PATH` | Optional | System FFmpeg binary for screen recording; defaults to `FFMPEG_PATH` or `ffmpeg` |
-| `SCREEN_RECORDING_WINDOW_TITLE` | Optional | Visible recorder window title to find with `xdotool`; defaults to `Discord` |
-| `SCREEN_RECORDING_GEOMETRY` | Optional | Exact capture region as `WIDTHxHEIGHT+X,Y`; bypasses `xdotool` window lookup |
-| `SCREEN_RECORDING_DISPLAY` | Optional | X11 display for `x11grab`; defaults to `DISPLAY` |
-| `SCREEN_RECORDING_AUDIO_SOURCE` | Optional | Pulse/PipeWire monitor source to include call audio; auto-detects the default sink monitor when blank |
-| `SCREEN_RECORDING_ALLOW_VIDEO_ONLY` | Optional | Set to `true` to allow screen clips without audio |
-| `SCREEN_RECORDING_FPS` | Optional | Screen capture FPS; defaults to `30` |
+| `DATA_DIR` | Optional | Persistent-storage root; runtime files are written below `DATA_DIR/data/` |
 | `VOICE_DEBUG` | Optional | Set to `true` for verbose Discord voice connection diagnostics |
 | `SOCIALS_GUILD_ID` | ✅ | Guild ID for verbose panda logging and leave tracking |
 | `PANDA_EMOJI_NAME` | ✅ | Name of the custom emoji used for panda awards |
@@ -68,11 +61,16 @@ The bot stores persistent data in the `data/` directory:
 - `data/roles.json` — Custom role registry per guild
 - `data/pandaChannels.json` — Maps guild IDs to their designated panda channel
 - `data/partnerChannels.json` — Partner server channel configuration
-- `recordings/` — Screen recording sessions, rolling segments, and MP4 clips (ignored by git)
 
-## Screen Recording Notes
+## Railway Deployment
 
-`!record on` does not join or automate Discord. A dedicated recorder account/window must already be joined to the call and visible on the host running the bot. Clips capture only what that window renders, so hidden, minimized, or offscreen cams and streams will not appear.
+1. Deploy this GitHub repository as a Railway service. Railway detects the Node app and uses `npm start`.
+2. Add the values from `.env.example` in the service's **Variables** tab. Never upload the local `.env` file.
+3. Attach a Railway volume at an absolute path such as `/bot-state`.
+4. Set `DATA_DIR=/bot-state`. Runtime JSON is stored under `/bot-state/data/`; on a new empty volume, the committed `data/*.json` files provide the initial state.
+5. Keep the service at one replica. The JSON-file storage is not safe for concurrent writers.
+
+No public domain or inbound port is required because the bot connects outbound to Discord.
 
 ## Inviting the Bot
 

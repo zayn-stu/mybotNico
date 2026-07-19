@@ -3,3 +3,8 @@ node_modules/
 *.log
 .DS_Store
 recordings/
+clips/
+
+# Runtime state — should not be versioned
+data/*.json
+!data/*.example.json

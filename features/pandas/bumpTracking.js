@@ -1,5 +1,5 @@
 const path = require('path');
-const { readJsonFile, writeJsonFileAtomic } = require('../../shared/jsonStore');
+const { readJsonFile, writeJsonFileDebounced } = require('../../shared/jsonStore');
 
 const DATA_FILE = path.join(__dirname, '..', '..', 'data', 'bumpTracking.json');
 
@@ -14,12 +14,8 @@ function loadData() {
 }
 
 function saveData(data) {
-  try {
-    writeJsonFileAtomic(DATA_FILE, data, { ensureDirectory: true });
-    cache = data;
-  } catch (err) {
-    console.error('[bumpTracking] Error saving data:', err);
-  }
+  cache = data;
+  writeJsonFileDebounced(DATA_FILE, data, { ensureDirectory: true });
 }
 
 function getTodayUTC() {

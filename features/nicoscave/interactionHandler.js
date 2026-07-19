@@ -1,3 +1,4 @@
+const { MessageFlags } = require('discord.js');
 const { loadBalance } = require('./balance');
 const {
   buyItem,
@@ -21,7 +22,7 @@ function parseIndex(value) {
 async function rejectWrongUser(interaction) {
   await interaction.reply({
     content: 'This cave paperwork belongs to someone else.',
-    ephemeral: true,
+    flags: MessageFlags.Ephemeral,
   });
 }
 

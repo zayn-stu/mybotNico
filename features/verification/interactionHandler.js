@@ -3,6 +3,7 @@ const {
   ButtonBuilder,
   ButtonStyle,
   EmbedBuilder,
+  MessageFlags,
   ModalBuilder,
   PermissionFlagsBits,
   TextInputBuilder,
@@ -54,7 +55,7 @@ async function handleVerifyButton(interaction) {
   if (!isSocialsGuildInteraction(interaction)) {
     return interaction.reply({
       content: '❌ Verification is only available in Socials.',
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
   }
 
@@ -62,7 +63,7 @@ async function handleVerifyButton(interaction) {
 
   const statusReply = getBlockingStatusReply(interaction);
   if (statusReply) {
-    return interaction.reply({ content: statusReply, ephemeral: true });
+    return interaction.reply({ content: statusReply, flags: MessageFlags.Ephemeral });
   }
 
   const pending = getOrCreatePendingVerification(interaction);
@@ -74,7 +75,7 @@ async function handleVerificationModal(interaction) {
   if (!isSocialsGuildInteraction(interaction)) {
     return interaction.reply({
       content: '❌ Verification is only available in Socials.',
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
   }
 
@@ -82,7 +83,7 @@ async function handleVerificationModal(interaction) {
   if (modalUserId && modalUserId !== interaction.user.id) {
     return interaction.reply({
       content: '❌ This verification form is not yours.',
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
   }
 
@@ -90,10 +91,10 @@ async function handleVerificationModal(interaction) {
 
   const statusReply = getBlockingStatusReply(interaction);
   if (statusReply) {
-    return interaction.reply({ content: statusReply, ephemeral: true });
+    return interaction.reply({ content: statusReply, flags: MessageFlags.Ephemeral });
   }
 
-  await interaction.deferReply({ ephemeral: true });
+  await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
   const pending = getOrCreatePendingVerification(interaction);
   const questions = getQuestionsForSource(pending.source);
@@ -132,14 +133,14 @@ async function handleReviewButton(interaction) {
   if (!isSocialsGuildInteraction(interaction)) {
     return interaction.reply({
       content: '❌ This review action is only available in Socials.',
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
   }
 
   if (!canReviewVerifications(interaction.member)) {
     return interaction.reply({
       content: '❌ You need Ban Members or Moderate Members permission to review verifications.',
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
   }
 
@@ -147,11 +148,11 @@ async function handleReviewButton(interaction) {
   if (!action || !userId) {
     return interaction.reply({
       content: '❌ Invalid verification review action.',
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
   }
 
-  await interaction.deferReply({ ephemeral: true });
+  await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
   const submission = getSubmission(interaction.guild.id, userId);
   if (!submission || submission.status !== 'review_pending') {

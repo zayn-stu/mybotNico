@@ -3,7 +3,6 @@ const { cacheGuildInvites } = require('../../utils/inviteTracker');
 const { initPandaLogger } = require('../../features/pandas/logger');
 const { startGiveawayScheduler } = require('../../features/giveaways/lifecycle');
 const { logVoiceDependencyReport, restoreVoiceConnections } = require('../../features/voice/connection');
-const { markInterruptedScreenRecordings } = require('../../features/voice/screenRecording/service');
 const { ensureVerificationMessage } = require('../../features/verification/ready');
 const {
   initializeVoiceTracking,
@@ -17,7 +16,6 @@ async function handleReady(context) {
   console.log(`✅ Bot is online as ${client.user.tag}`);
   logVoiceDependencyReport();
   initPandaLogger(client);
-  markInterruptedScreenRecordings();
   await restoreVoiceConnections(client);
 
   // Migrate display names with guild context (fetches actual server nicknames)

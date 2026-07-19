@@ -17,8 +17,7 @@ module.exports = {
         '**Moderation Commands:**\n' +
         '`!purge {count}` - Delete the last {count} messages (1-100)\n\n' +
         '**Owner Commands:**\n' +
-        '`!reset pandas` - Reset panda leaderboard data\n' +
-        '`!record on` / `!record off` - Start or stop screen recording\n\n' +
+        '`!reset pandas` - Reset panda leaderboard data\n\n' +
         '**Note:** Admins cannot modify roles belonging to higher-ranked users.'
       );
     }
@@ -33,9 +32,7 @@ module.exports = {
       '**Voice**\n' +
       '  • `!join` - Join your current voice channel\n' +
       '  • `!join <voice_channel_id>` - Join a specific voice channel\n' +
-      '  • `!leave` - Leave voice chat\n' +
-      '  • `!record` - Show screen recording status\n' +
-      '  • `!clip [note]` - Save a screen clip from the active recording\n\n' +
+      '  • `!leave` - Leave voice chat\n\n' +
       '**Nico\'s Cave** - Dungeon raid game\n' +
       '  • `!play` - Run a dungeon raid\n' +
       '  • `!store` - Buy gear\n' +

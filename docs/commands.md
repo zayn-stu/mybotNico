@@ -7,12 +7,6 @@
 ## ping
 - `!ping` - Check bot responsiveness
 
-## recording
-- `!record` - Show screen recording status and command help
-- `!record on` - Start capturing the visible prejoined Discord call window (bot owners only)
-- `!clip [note]` - Save a composited MP4 screen clip: 60 seconds before the command plus 20 seconds after
-- `!record off` - Stop screen recording and finalize pending clips (bot owners only)
-
 ## role
 - `!role menu` - Create or edit your custom role with the interactive menu
 - `!role delete` - Delete your custom role

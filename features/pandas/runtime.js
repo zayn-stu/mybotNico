@@ -1,5 +1,5 @@
 const path = require('path');
-const { readJsonFile, writeJsonFile } = require('../../shared/jsonStore');
+const { readJsonFile, writeJsonFileDebounced } = require('../../shared/jsonStore');
 
 const PANDA_THRESHOLD_MIN = 30;
 const PANDA_THRESHOLD_MAX = 40;
@@ -27,22 +27,12 @@ function loadPersistedState() {
   }
 }
 
-let saveQueued = false;
 function savePersistedState() {
-  if (saveQueued) return;
-  saveQueued = true;
-  process.nextTick(() => {
-    saveQueued = false;
-    try {
-      const data = {};
-      for (const [guildId, state] of guildStates.entries()) {
-        data[guildId] = state;
-      }
-      writeJsonFile(STATE_FILE, data);
-    } catch (err) {
-      console.warn('[pandaRuntime] Could not save persisted state:', err.message);
-    }
-  });
+  const data = {};
+  for (const [guildId, state] of guildStates.entries()) {
+    data[guildId] = state;
+  }
+  writeJsonFileDebounced(STATE_FILE, data);
 }
 
 // Load state from disk on startup

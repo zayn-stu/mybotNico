@@ -12,6 +12,9 @@ const { readJsonFile, writeJsonFileAtomic } = require('../../shared/jsonStore');
 const DATA_FILE = path.join(__dirname, '..', '..', 'data', 'voiceConnections.json');
 const activeConnections = new Map();
 const diagnosedNetworking = new WeakSet();
+const RECONNECT_DELAYS_MS = [0, 1_000, 2_000, 5_000, 10_000, 30_000];
+const RECOVERY_GRACE_MS = 5_000;
+const INITIAL_CONNECTION_GRACE_MS = 30_000;
 const networkingStatusNames = {
   0: 'OpeningWs',
   1: 'Identifying',
@@ -121,6 +124,23 @@ function parseVoiceChannelId(value) {
   return match?.[1] || null;
 }
 
+function getReconnectDelay(attempt) {
+  const index = Math.min(Math.max(attempt, 0), RECONNECT_DELAYS_MS.length - 1);
+  return RECONNECT_DELAYS_MS[index];
+}
+
+function clearTimer(tracked, key) {
+  if (!tracked?.[key]) return;
+  clearTimeout(tracked[key]);
+  tracked[key] = null;
+  if (key === 'recoveryTimer') tracked.recoveryGraceMs = null;
+}
+
+function clearReconnectTimers(tracked) {
+  clearTimer(tracked, 'reconnectTimer');
+  clearTimer(tracked, 'recoveryTimer');
+}
+
 async function fetchBotMember(guild) {
   return guild.members.me || guild.members.fetchMe().catch(() => null);
 }
@@ -152,24 +172,128 @@ async function resolveVoiceChannel(message, args) {
   return { channel };
 }
 
-function attachReconnectHandler(connection, client) {
-  connection.on(VoiceConnectionStatus.Disconnected, async () => {
-    const tracked = activeConnections.get(connection.joinConfig.guildId);
-    if (!tracked?.shouldReconnect) return;
+function scheduleReconnect(guildId, client, cause, delayOverride) {
+  const tracked = activeConnections.get(guildId);
+  if (!tracked?.shouldReconnect || tracked.reconnectTimer) return;
+
+  clearTimer(tracked, 'recoveryTimer');
+  const attempt = tracked.reconnectAttempts || 0;
+  const delayMs = delayOverride ?? getReconnectDelay(attempt);
+  console.warn(
+    `[voice] Rejoining guild ${guildId} in ${delayMs}ms after ${cause} ` +
+    `(attempt ${attempt + 1})`
+  );
+
+  tracked.reconnectTimer = setTimeout(async () => {
+    const latest = activeConnections.get(guildId);
+    if (latest !== tracked || !tracked.shouldReconnect) return;
+
+    tracked.reconnectTimer = null;
+    tracked.reconnectAttempts = attempt + 1;
+
+    let channel;
+    try {
+      channel = await client.channels.fetch(tracked.channelId);
+    } catch (error) {
+      console.warn(`[voice] Could not fetch channel ${tracked.channelId} for rejoin: ${error.message}`);
+      scheduleReconnect(guildId, client, 'channel fetch failure');
+      return;
+    }
+
+    // A successful fetch of a non-voice channel means the saved target is no
+    // longer usable. Fetch failures above remain retryable because Discord or
+    // the main gateway may still be recovering.
+    if (!channel?.isVoiceBased() || channel.type === ChannelType.GuildStageVoice) {
+      console.error(`[voice] Stopping reconnects for guild ${guildId}: voice channel ${tracked.channelId} no longer exists`);
+      tracked.shouldReconnect = false;
+      activeConnections.delete(guildId);
+      clearVoiceTarget(guildId);
+      return;
+    }
+
+    if (activeConnections.get(guildId) !== tracked || !tracked.shouldReconnect) return;
 
     try {
-      await entersState(connection, VoiceConnectionStatus.Ready, 30_000);
-    } catch {
-      const latest = activeConnections.get(connection.joinConfig.guildId);
-      if (!latest?.shouldReconnect) return;
+      connectToChannel(channel, client, {
+        selfDeaf: tracked.selfDeaf,
+        selfMute: tracked.selfMute,
+        reason: `reconnect:${cause}`,
+        reconnectAttempts: tracked.reconnectAttempts,
+      });
+    } catch (error) {
+      console.error(`[voice] Rejoin attempt failed for guild ${guildId}:`, error);
+      tracked.connection = null;
+      tracked.shouldReconnect = true;
+      activeConnections.set(guildId, tracked);
+      scheduleReconnect(guildId, client, 'join failure');
+    }
+  }, delayMs);
+  tracked.reconnectTimer.unref?.();
+}
 
-      const channel = await client.channels.fetch(latest.channelId).catch(() => null);
-      if (!channel?.isVoiceBased()) {
-        activeConnections.delete(connection.joinConfig.guildId);
-        return;
-      }
+function armRecoveryWatchdog(connection, client, cause, graceMs = RECOVERY_GRACE_MS) {
+  const guildId = connection.joinConfig.guildId;
+  const tracked = activeConnections.get(guildId);
+  if (
+    !tracked?.shouldReconnect ||
+    tracked.connection !== connection ||
+    tracked.reconnectTimer
+  ) return;
 
-      connectToChannel(channel, client);
+  // Keep the earliest watchdog. A concrete WebSocket error shortens the
+  // relaxed initial-join deadline instead of waiting the full 30 seconds.
+  if (tracked.recoveryTimer) {
+    if (tracked.recoveryGraceMs <= graceMs) return;
+    clearTimer(tracked, 'recoveryTimer');
+  }
+
+  tracked.recoveryTimer = setTimeout(() => {
+    const latest = activeConnections.get(guildId);
+    if (latest !== tracked || !tracked.shouldReconnect || tracked.connection !== connection) return;
+
+    tracked.recoveryTimer = null;
+    if (connection.state.status === VoiceConnectionStatus.Ready) {
+      tracked.reconnectAttempts = 0;
+      return;
+    }
+
+    scheduleReconnect(guildId, client, `${cause}; stuck in ${connection.state.status}`);
+  }, graceMs);
+  tracked.recoveryGraceMs = graceMs;
+  tracked.recoveryTimer.unref?.();
+}
+
+function attachReconnectHandler(connection, client) {
+  connection.on('stateChange', (oldState, newState) => {
+    const guildId = connection.joinConfig.guildId;
+    const tracked = activeConnections.get(guildId);
+    if (!tracked?.shouldReconnect || tracked.connection !== connection) return;
+
+    if (newState.status === VoiceConnectionStatus.Ready) {
+      const recovered = tracked.reconnectAttempts > 0;
+      clearReconnectTimers(tracked);
+      tracked.reconnectAttempts = 0;
+      if (recovered) console.log(`[voice] Reconnected successfully in guild ${guildId}`);
+      return;
+    }
+
+    if (
+      newState.status === VoiceConnectionStatus.Disconnected ||
+      newState.status === VoiceConnectionStatus.Destroyed
+    ) {
+      clearTimer(tracked, 'recoveryTimer');
+      scheduleReconnect(guildId, client, `connection became ${newState.status}`, 0);
+      return;
+    }
+
+    if (
+      newState.status === VoiceConnectionStatus.Signalling ||
+      newState.status === VoiceConnectionStatus.Connecting
+    ) {
+      const graceMs = oldState.status === VoiceConnectionStatus.Ready
+        ? RECOVERY_GRACE_MS
+        : INITIAL_CONNECTION_GRACE_MS;
+      armRecoveryWatchdog(connection, client, 'automatic recovery did not finish', graceMs);
     }
   });
 }
@@ -180,10 +304,12 @@ function connectToChannel(channel, client, options = {}) {
     selfMute = false,
     reason = 'normal',
     shouldReconnect = true,
+    reconnectAttempts = 0,
   } = options;
   const previous = activeConnections.get(channel.guild.id);
   if (previous) {
     previous.shouldReconnect = false;
+    clearReconnectTimers(previous);
     activeConnections.delete(channel.guild.id);
   }
 
@@ -198,6 +324,13 @@ function connectToChannel(channel, client, options = {}) {
     selfMute,
     debug: isVoiceDebugEnabled(),
   });
+  // Always handle 'error' so a voice websocket/networking failure (e.g. a 521
+  // from Discord) is logged instead of crashing the process. The library gets
+  // a short chance to recover, then our watchdog creates a fresh connection.
+  connection.on('error', error => {
+    console.error(`[voice] Connection error in ${channel.guild.name}#${channel.name}: ${error.message}`);
+    armRecoveryWatchdog(connection, client, `connection error: ${error.message}`);
+  });
   attachVoiceDiagnostics(connection, `${channel.guild.name}#${channel.name}/${reason}`);
 
   activeConnections.set(channel.guild.id, {
@@ -207,9 +340,19 @@ function connectToChannel(channel, client, options = {}) {
     selfMute,
     reason,
     shouldReconnect,
+    reconnectAttempts,
+    reconnectTimer: null,
+    recoveryTimer: null,
+    recoveryGraceMs: null,
   });
 
   attachReconnectHandler(connection, client);
+  armRecoveryWatchdog(
+    connection,
+    client,
+    'initial connection did not become ready',
+    INITIAL_CONNECTION_GRACE_MS
+  );
   return connection;
 }
 
@@ -261,6 +404,7 @@ async function leaveVoice(message) {
 
   if (tracked) {
     tracked.shouldReconnect = false;
+    clearReconnectTimers(tracked);
     activeConnections.delete(message.guild.id);
   }
 
@@ -302,8 +446,10 @@ async function restoreVoiceConnections(client) {
 
 module.exports = {
   activeConnections,
+  attachReconnectHandler,
   connectToChannel,
   fetchBotMember,
+  getReconnectDelay,
   hasVoiceAccess,
   joinVoice,
   logVoiceDependencyReport,

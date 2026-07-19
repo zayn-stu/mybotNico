@@ -1,5 +1,5 @@
 const path = require('path');
-const { readJsonFile, writeJsonFileAtomic } = require('../../shared/jsonStore');
+const { readJsonFile, writeJsonFileDebounced } = require('../../shared/jsonStore');
 
 const DATA_FILE = path.join(__dirname, '..', '..', 'data', 'pandas.json');
 
@@ -25,13 +25,8 @@ function loadData() {
 
 
 function saveData(data) {
-  try {
-    writeJsonFileAtomic(DATA_FILE, data, { ensureDirectory: true });
-    pandaCache = data;
-  } catch (err) {
-    console.error('Error saving panda data:', err);
-    throw err;
-  }
+  pandaCache = data;
+  writeJsonFileDebounced(DATA_FILE, data, { ensureDirectory: true });
 }
 
 function addPanda(guildId, userId, username, amount = 1, displayName = null) {
@@ -222,7 +217,7 @@ async function migrateDisplayNamesWithGuilds(client) {
   
   if (needsSave) {
     try {
-      writeJsonFileAtomic(DATA_FILE, data);
+      writeJsonFileDebounced(DATA_FILE, data);
       pandaCache = data;
       console.log('[pandaStorage] Migrated displayNames with fetched guild nicknames');
     } catch (err) {

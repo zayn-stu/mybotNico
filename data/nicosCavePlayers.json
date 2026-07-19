@@ -76,5 +76,44 @@
     },
     "createdAt": "2026-05-14T13:31:58.526Z",
     "updatedAt": "2026-05-14T13:32:56.274Z"
+  },
+  "1368037529399328768": {
+    "userId": "1368037529399328768",
+    "username": "algerianjay",
+    "coins": 60,
+    "level": 2,
+    "xp": 35,
+    "unlockedDepth": 2,
+    "equipped": {
+      "tool": "g_mqt4gkpg_814f0c",
+      "weapon": "g_mqt4gkpg_a281cc"
+    },
+    "inventory": {
+      "gear": {
+        "g_mqt4gkpg_814f0c": {
+          "id": "g_mqt4gkpg_814f0c",
+          "itemId": "wood_pickaxe",
+          "slot": "tool",
+          "acquiredAt": "2026-06-25T06:29:21.748Z",
+          "sellValue": 5
+        },
+        "g_mqt4gkpg_a281cc": {
+          "id": "g_mqt4gkpg_a281cc",
+          "itemId": "wood_sword",
+          "slot": "weapon",
+          "acquiredAt": "2026-06-25T06:29:21.748Z",
+          "sellValue": 5
+        }
+      },
+      "materials": {
+        "iron": 5
+      }
+    },
+    "raids": {
+      "dayKey": "2026-06-25",
+      "used": 1
+    },
+    "createdAt": "2026-06-25T06:29:21.748Z",
+    "updatedAt": "2026-06-25T06:29:21.748Z"
   }
 }

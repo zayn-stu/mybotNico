@@ -1,4 +1,4 @@
-const { ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder } = require('discord.js');
+const { ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder, MessageFlags } = require('discord.js');
 const { parseColor, COLOR_NAMES } = require('./colors');
 const { positionRole, buildColorOptions, buildColorEditorMessage } = require('./roleHelpers');
 const {
@@ -22,7 +22,7 @@ async function getRoleMenuContext(interaction, targetUserId = null) {
     if (!interaction.guild || !interaction.member) {
       await interaction.reply({
         content: '❌ This action can only be used in a guild.',
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
       return null;
     }
@@ -30,7 +30,7 @@ async function getRoleMenuContext(interaction, targetUserId = null) {
     if (!userCanManageRoles(interaction.member)) {
       await interaction.reply({
         content: '❌ You need the Manage Roles permission to create unowned roles.',
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
       return null;
     }
@@ -53,7 +53,7 @@ async function getRoleMenuContext(interaction, targetUserId = null) {
   if (!interaction.guild || !interaction.member) {
     await interaction.reply({
       content: '❌ This action can only be used in a guild.',
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
     return null;
   }
@@ -61,7 +61,7 @@ async function getRoleMenuContext(interaction, targetUserId = null) {
   if (!userCanManageRoles(interaction.member)) {
     await interaction.reply({
       content: '❌ You need the Manage Roles permission to edit another user\'s role.',
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
     return null;
   }
@@ -70,7 +70,7 @@ async function getRoleMenuContext(interaction, targetUserId = null) {
   if (!targetMember) {
     await interaction.reply({
       content: '❌ Target user not found.',
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
     return null;
   }
@@ -78,7 +78,7 @@ async function getRoleMenuContext(interaction, targetUserId = null) {
   if (!canModifyMember(interaction.member, targetMember)) {
     await interaction.reply({
       content: '❌ You cannot modify roles for someone with equal or higher rank than you.',
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
     return null;
   }
@@ -116,7 +116,7 @@ async function handleRoleEditModal(interaction) {
   if (!guild || (!targetMember && !context.isCreateMode)) {
     return interaction.reply({
       content: '❌ This command can only be used in a guild.',
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
   }
 
@@ -127,7 +127,7 @@ async function handleRoleEditModal(interaction) {
   if (!roleName || roleName.length === 0 || roleName.length > 100) {
     return interaction.reply({
       content: '❌ Role name must be between 1 and 100 characters.',
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
   }
 
@@ -135,7 +135,7 @@ async function handleRoleEditModal(interaction) {
   if (!primaryColor) {
     return interaction.reply({
       content: `❌ Invalid primary color. Use hex (#FF0000) or name (red, blue, etc.).\n\n**Available colors:** ${Object.keys(COLOR_NAMES).join(', ')}`,
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
   }
 
@@ -145,14 +145,14 @@ async function handleRoleEditModal(interaction) {
     if (!secondaryColor) {
       return interaction.reply({
         content: `❌ Invalid secondary color. Use hex (#FF0000) or name (red, blue, etc.).\n\n**Available colors:** ${Object.keys(COLOR_NAMES).join(', ')}`,
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
     }
 
     if (primaryColor.toUpperCase() === secondaryColor.toUpperCase()) {
       return interaction.reply({
         content: '❌ Gradient colors must be different.',
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
     }
   }
@@ -166,7 +166,7 @@ async function handleRoleEditModal(interaction) {
       if (!role) {
         return interaction.reply({
           content: '❌ Your role no longer exists in the server. Please use `!role set` to create a new one.',
-          ephemeral: true,
+          flags: MessageFlags.Ephemeral,
         });
       }
 
@@ -182,7 +182,7 @@ async function handleRoleEditModal(interaction) {
         content: secondaryColor
           ? `✅ Updated role **${roleName}** with colors \`${primaryColor}\` → \`${secondaryColor}\``
           : `✅ Updated role **${roleName}** with color \`${primaryColor}\``,
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
     }
 
@@ -221,13 +221,13 @@ async function handleRoleEditModal(interaction) {
         : secondaryColor
         ? `✅ Created gradient role **${roleName}** with colors \`${primaryColor}\` → \`${secondaryColor}\``
         : `✅ Created role **${roleName}** with color \`${primaryColor}\``,
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
   } catch (err) {
     console.error('[interaction] Error handling role edit:', err);
     return interaction.reply({
       content: `❌ Failed to update role: ${err.message}`,
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
   }
 }
@@ -261,7 +261,7 @@ async function handleColorSelect(interaction, isPrimary, targetUserId = null) {
     console.error('[interaction] Error updating message:', err);
     await interaction.reply({
       content: '❌ Failed to update colors.',
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     }).catch(() => {});
   }
 }
@@ -283,7 +283,7 @@ async function handleExistingRoleSelect(interaction, targetUserId = null) {
     console.error('[interaction] Error updating selected role:', err);
     await interaction.reply({
       content: '❌ Failed to update selected role.',
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     }).catch(() => {});
   }
 }
@@ -297,7 +297,7 @@ async function handleRoleEditButton(interaction, targetUserId = null) {
   if (!guild) {
     return interaction.reply({
       content: '❌ This command can only be used in a guild.',
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
   }
 
@@ -310,7 +310,7 @@ async function handleRoleEditButton(interaction, targetUserId = null) {
     if (!selectedRole) {
       return interaction.reply({
         content: '❌ Selected role no longer exists.',
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
     }
 
@@ -318,7 +318,7 @@ async function handleRoleEditButton(interaction, targetUserId = null) {
     if (!storedRole || storedRole.creatorId) {
       return interaction.reply({
         content: '❌ Selected role is no longer available for assignment.',
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
     }
 
@@ -327,13 +327,13 @@ async function handleRoleEditButton(interaction, targetUserId = null) {
       await updateRole(guild.id, selectedRole.id, { creatorId: contextUserId });
       return interaction.reply({
         content: `✅ Assigned role **${selectedRole.name}** to ${targetMember.user.tag}.`,
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
     } catch (err) {
       console.error('[interaction] Error assigning existing role:', err);
       return interaction.reply({
         content: `❌ Failed to assign role: ${err.message}`,
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
     }
   }
@@ -391,7 +391,7 @@ async function handleRoleEditButton(interaction, targetUserId = null) {
     console.error('[interaction] Error showing modal:', err);
     return interaction.reply({
       content: `❌ Failed to open role editor: ${err.message}`,
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
   }
 }

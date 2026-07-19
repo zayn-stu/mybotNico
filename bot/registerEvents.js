@@ -13,7 +13,6 @@ const { handleMessageReactionRemove } = require('./events/messageReactionRemove'
 function createRuntimeContext(client) {
   const socialsGuildId = process.env.SOCIALS_GUILD_ID || '';
   const degeneracyGuildId = process.env.DEGENERACY_GUILD_ID || '';
-  const dejavuGuildId = process.env.DEJAVU_GUILD_ID || '';
 
   return {
     client,
@@ -30,9 +29,8 @@ function createRuntimeContext(client) {
     pirateMessageCounter: new Map(),
     socialsGuildId,
     degeneracyGuildId,
-    dejavuGuildId,
     disboardBotId: '302050872383242240',
-    trackedGuilds: [socialsGuildId, degeneracyGuildId, dejavuGuildId].filter(Boolean),
+    trackedGuilds: [socialsGuildId, degeneracyGuildId].filter(Boolean),
   };
 }
 
