@@ -4,6 +4,33 @@ const { loadCommands } = require('./handlers/commandHandler');
 const { registerEvents } = require('./bot/registerEvents');
 const { flushAllWrites } = require('./shared/jsonStore');
 
+function requireDiscordToken() {
+  const rawToken = process.env.DISCORD_TOKEN;
+  const token = typeof rawToken === 'string' ? rawToken.trim() : '';
+  const tokenLikeVariables = Object.keys(process.env)
+    .filter(name => name.includes('TOKEN'))
+    .sort();
+
+  console.log('[startup] Environment check:', {
+    railwayService: process.env.RAILWAY_SERVICE_NAME || '(not provided)',
+    railwayEnvironment: process.env.RAILWAY_ENVIRONMENT_NAME || '(not provided)',
+    discordTokenStatus: rawToken === undefined ? 'missing' : token ? 'present' : 'empty',
+    discordTokenLength: token.length,
+    tokenLikeVariables,
+  });
+
+  if (!token) {
+    throw new Error(
+      'DISCORD_TOKEN is missing or empty in this running service. ' +
+      'The environment check above identifies the Railway service and environment that were deployed.'
+    );
+  }
+
+  return token;
+}
+
+const discordToken = requireDiscordToken();
+
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
@@ -23,7 +50,7 @@ console.log('Loading commands...');
 loadCommands(client);
 registerEvents(client);
 
-client.login(process.env.DISCORD_TOKEN);
+client.login(discordToken);
 
 // Flush any debounced JSON writes before exiting so queued state isn't lost.
 let shuttingDown = false;
